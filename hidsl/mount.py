@@ -6,7 +6,7 @@ from typing import Iterable, Union
 
 from hidsl.functions import exe
 from hidsl.logging import LOGGER
-from hidsl.partition import Partition
+from hidsl.types import Partition
 
 
 __all__ = ['MountContext']

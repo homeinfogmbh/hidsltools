@@ -3,8 +3,8 @@
 from logging import getLogger
 
 
-__all__ = ['LOGGER']
+__all__ = ['FORMAT', 'LOGGER']
 
 
-LOG_FORMAT = '[%(levelname)s] %(name)s: %(message)s'
+FORMAT = '[%(levelname)s] %(name)s: %(message)s'
 LOGGER = getLogger('restore')

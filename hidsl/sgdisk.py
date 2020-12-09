@@ -1,24 +1,16 @@
 """Partitioning."""
 
-from pathlib import Path
-from typing import Generator, NamedTuple, Union
+from typing import Generator
 
 from hidsl.device import Device
 from hidsl.functions import exe
+from hidsl.types import Partition
 
 
-__all__ = ['Partition', 'partition']
+__all__ = ['Partition', 'mkparts']
 
 
 SGDISK = '/usr/bin/sgdisk'
-
-
-class Partition(NamedTuple):
-    """A partition."""
-
-    mountpoint: Union[Path, str, None]
-    device: Path
-    filesystem: str
 
 
 def mkefipart(device: Device, *, size: str = '500M', verbose: bool = False):
@@ -35,8 +27,8 @@ def mkroot(device: Device, *, partno: int = 1, verbose: bool = False):
     exe([SGDISK, '-t', f'{partno}:ef00', str(device)], verbose=verbose)
 
 
-def partition(device: Device, *, mbr: bool = False,
-              verbose: bool = False) -> Generator[Partition, None, None]:
+def mkparts(device: Device, *, mbr: bool = False,
+            verbose: bool = False) -> Generator[Partition, None, None]:
     """Partitions a disk."""
 
     exe([SGDISK, '-og', str(device)], verbose=verbose)
