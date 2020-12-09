@@ -2,11 +2,15 @@
 
 from subprocess import DEVNULL, CompletedProcess, run
 
+from hidsl.logging import LOGGER
+
+
 __all__ = ['exe']
 
 
-def exe(*args, verbose: bool = False, **kwargs) -> CompletedProcess:
+def exe(command, verbose: bool = False) -> CompletedProcess:
     """Returns stdout and stderr parameters for subprocess.run()."""
 
     out = None if verbose else DEVNULL
-    return run(*args, check=True, stderr=out, stdout=out, **kwargs)
+    LOGGER.debug('Running command: %s', command)
+    return run(command, check=True, stderr=out, stdout=out)
