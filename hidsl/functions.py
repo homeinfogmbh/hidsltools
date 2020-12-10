@@ -24,7 +24,7 @@ def exe(command, *, input: bytes = None,    # pylint: disable=W0622
     """Returns stdout and stderr parameters for subprocess.run()."""
 
     stderr = None if verbose else DEVNULL
-    stdout = None if verbose else DEVNULL if stdout is None else stdout
+    stdout = stdout if stdout is not None else None if verbose else DEVNULL
     LOGGER.debug('Running command: %s', command)
     return run(command, input=input, check=True, stderr=stderr, stdout=stdout)
 
