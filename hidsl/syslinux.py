@@ -6,9 +6,10 @@ from typing import Union
 from hidsl.functions import exe
 
 
-__all__ = ['install_update']
+__all__ = ['AUTOUPDATE', 'install_update']
 
 
+AUTOUPDATE = Path('/boot/syslinux/SYSLINUX_AUTOUPDATE')
 SYSLINUX_INSTALL_UPDATE = '/usr/bin/syslinux-install_update'
 
 

@@ -3,12 +3,14 @@
 from pathlib import Path
 from typing import Union
 
-from hidsl.functions import exe, arch_chroot
+from hidsl.functions import arch_chroot, exe
+from hidsl.types import Glob
 
 
-__all__ = ['mkinitcpio']
+__all__ = ['INITRAMFS', 'mkinitcpio']
 
 
+INITRAMFS = Glob('/boot', 'initramfs-linux*.img')
 MKINITCPIO = '/usr/bin/mkinitcpio'
 
 

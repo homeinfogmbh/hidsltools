@@ -4,10 +4,23 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Generator, NamedTuple, Union
 
-from hidsl.functions import relpath
+from hidsl.functions import chroot
 
 
-__all__ = ['Melody', 'Note', 'Partition']
+__all__ = ['Glob', 'Melody', 'Note', 'Partition']
+
+
+class Glob:
+    """A re-iterable path glob."""
+
+    def __init__(self, path: Path, glob: str):
+        """Sets path and glob expression."""
+        self.path = path
+        self.glob = glob
+
+    def __iter__(self):
+        """Returns the glob generator."""
+        return self.path.glob(self.glob)
 
 
 class Melody(list):
@@ -61,9 +74,9 @@ class Partition(NamedTuple):
     device: Path
     filesystem: str
 
-    def relative_to(self, root: Path) -> Path:
-        """Returns a path relative to the root."""
+    def chroot(self, root: Path) -> Path:
+        """Returns a chrooted path."""
         if not self.mountpoint:
             return root
 
-        return relpath(root, self.mountpoint)
+        return chroot(root, self.mountpoint)

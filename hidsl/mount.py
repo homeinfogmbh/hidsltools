@@ -51,13 +51,13 @@ class MountContext:
     def mount(self):
         """Mounts all partitions to the mountpoint."""
         for partition in self.partitions:
-            mountpoint = partition.relative_to(self.mountpoint)
+            mountpoint = partition.chroot(self.mountpoint)
             LOGGER.debug('Mounting %s to %s.', partition.device, mountpoint)
             mount(partition.device, mountpoint, verbose=self.verbose)
 
     def umount(self):
         """Mounts all partitions to the mountpoint."""
         for partition in reversed(self.partitions):
-            mountpoint = partition.relative_to(self.mountpoint)
+            mountpoint = partition.chroot(self.mountpoint)
             LOGGER.debug('Umounting %s.', mountpoint)
             umount(mountpoint, verbose=self.verbose)

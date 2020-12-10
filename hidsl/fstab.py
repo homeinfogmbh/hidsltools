@@ -3,10 +3,10 @@
 from pathlib import Path
 from typing import Union
 
-from hidsl.functions import exe, relpath
+from hidsl.functions import chroot, exe
 
 
-__all__ = ['genfstab']
+__all__ = ['FSTAB', 'genfstab']
 
 
 FSTAB = Path('/etc/fstab')
@@ -18,5 +18,5 @@ def genfstab(*, root: Union[Path, str] = '/', verbose: bool = False):
 
     command = [GENFSTAB, '-L', '-p', str(root)]
 
-    with relpath(root, FSTAB).open('w') as file:
+    with chroot(root, FSTAB).open('w') as file:
         exe(command, stdout=file, verbose=verbose)
