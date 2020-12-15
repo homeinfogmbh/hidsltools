@@ -1,18 +1,14 @@
 """Common functions."""
 
-from contextlib import ExitStack
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import Iterable, Union
 
-from hidsl.device import Device
-from hidsl.exceptions import NotAMountPointOrBlockDevice
 from hidsl.functions import chroot, exe
 from hidsl.logging import LOGGER
 from hidsl.types import Filesystem, Partition
 
 
-__all__ = ['EnsuredMountpoint', 'MountContext']
+__all__ = ['MountContext']
 
 
 MOUNT = '/usr/bin/mount'
@@ -76,25 +72,3 @@ class MountContext:
             mountpoint = chroot(self.mountpoint, partition.mountpoint)
             LOGGER.debug('Umounting %s.', mountpoint)
             umount(mountpoint, verbose=self.verbose)
-
-
-class EnsuredMountpoint(ExitStack):
-    """Ensures a mount point."""
-
-    def __init__(self, path: Union[Path, str]):
-        """Sets the mount point or device path."""
-        super().__init__()
-        self.path = Path(path)
-
-    def __enter__(self) -> Path:
-        """Returns the ensured mount point."""
-        if self.path.is_mount():
-            return self.path
-
-        if self.path.is_block_device():
-            tmpd = self.enter_context(TemporaryDirectory())
-            device = Device(self.path)
-            self.enter_context(MountContext(tmpd, device.partitions))
-            return Path(tmpd)
-
-        raise NotAMountPointOrBlockDevice(self.path)

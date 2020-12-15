@@ -11,10 +11,9 @@ from tempfile import TemporaryDirectory
 from typing import Union
 
 from hidsl.bsdtar import create
-from hidsl.exceptions import NotAMountPointOrBlockDevice
 from hidsl.functions import chroot
 from hidsl.logging import FORMAT, LOGGER
-from hidsl.mount import EnsuredMountpoint, MountContext
+from hidsl.mount import MountContext
 from hidsl.types import Filesystem, Partition
 
 
@@ -29,7 +28,7 @@ def get_args() -> Namespace:
     """Parses the command line arguments."""
 
     parser = ArgumentParser(description='Creates HIDSL images.')
-    parser.add_argument('source', type=Path, help='image source')
+    parser.add_argument('root', type=Path, help='reference system root')
     parser.add_argument('-f', '--file', default=FILENAME_TEMPLATE,
                         metavar='filename', help='the image file name')
     parser.add_argument('-c', '--cifs', metavar='share', help='CIFS share')
@@ -58,25 +57,29 @@ def cifs_mount(mountpoint: Union[Path, str], args: Namespace) -> MountContext:
                         **options)
 
 
-def make_image(mountpoint: Path, file: Path, args: Namespace) -> int:
-    """Creates the tarball."""
+def make_image(root: Path, file: Path, args: Namespace) -> int:
+    """Creates a tarball from a reference system's root directory."""
 
-    create(file, *mountpoint.glob('*'), compression=args.compression,
+    create(file, *root.glob('*'), compression=args.compression,
            compression_level= args.compression_level, verbose=args.verbose)
     return 0
 
 
-def from_mountpoint(mountpoint: Path, args: Namespace) -> int:
+def mkhidslimg(args: Namespace) -> int:
     """Creates an image from a given mount point."""
+
+    if not args.root.is_mount():
+        LOGGER.error('Specified root is not a mount point.')
+        return 1
 
     file = Path(get_filename(args.file))
 
     if args.cifs:
         with TemporaryDirectory() as tmp:
             with cifs_mount(tmp, args) as mount:
-                return make_image(mountpoint, chroot(mount, file), args)
+                return make_image(args.root, chroot(mount, file), args)
 
-    return make_image(mountpoint, file, args)
+    return make_image(args.root, file, args)
 
 
 def main():
@@ -86,12 +89,7 @@ def main():
     basicConfig(format=FORMAT, level=DEBUG if args.debug else INFO)
 
     try:
-        with EnsuredMountpoint(args.source) as mountpoint:
-            returncode = from_mountpoint(mountpoint, args)
-    except NotAMountPointOrBlockDevice:
-        LOGGER.error('Source %s is neither a mount point, nor a block device.',
-                     args.source)
-        exit(1)
+        returncode = mkhidslimg(args)
     except CalledProcessError as error:
         LOGGER.critical('Subprocess error.')
         LOGGER.error(error)

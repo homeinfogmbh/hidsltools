@@ -7,13 +7,11 @@ from pathlib import Path
 from subprocess import CalledProcessError
 from sys import exit    # pylint: disable=W0622
 
-from hidsl.exceptions import NotAMountPointOrBlockDevice
 from hidsl.fstab import FSTAB
 from hidsl.functions import chroot
 from hidsl.hostid import HOST_ID, HOSTNAME, MACHINE_ID
 from hidsl.initcpio import INITRAMFS
 from hidsl.logging import FORMAT, LOGGER
-from hidsl.mount import EnsuredMountpoint
 from hidsl.openvpn import delete_client_config
 from hidsl.ssh import HOST_KEYS
 from hidsl.syslinux import AUTOUPDATE
@@ -37,7 +35,7 @@ def get_args() -> Namespace:
     """Returns the CLI arguments."""
 
     parser = ArgumentParser(description=DESCRIPTION)
-    parser.add_argument('target', type=Path, default=MOUNTPOINT,
+    parser.add_argument('root', type=Path, default=MOUNTPOINT,
                         help='the target system')
     parser.add_argument('-q', '--quiet', action='store_true',
                         help='do not beep after completion')
@@ -48,15 +46,19 @@ def get_args() -> Namespace:
     return parser.parse_args()
 
 
-def reset(mountpoint: Path, args: Namespace):
+def reset(args: Namespace) -> int:
     """Performs the reset."""
 
+    if not args.root.is_mount():
+        LOGGER.error('Specified root is not a mount point.')
+        return 1
+
     LOGGER.info('Disabling application.service.')
-    disable(APPLICATION, root=mountpoint, verbose=args.verbose)
+    disable(APPLICATION, root=args.root, verbose=args.verbose)
     LOGGER.info('Enabling unconfigured-warning.service.')
-    enable(WARNING, root=mountpoint, verbose=args.verbose)
+    enable(WARNING, root=args.root, verbose=args.verbose)
     LOGGER.info('Removing OpenVPN client configuration.')
-    delete_client_config(root=mountpoint)
+    delete_client_config(root=args.root)
     remove_globs = [
         Glob(chroot(args.chroot, glob.path), glob.glob)
         for glob in REMOVE_GLOBS
@@ -64,12 +66,13 @@ def reset(mountpoint: Path, args: Namespace):
 
     for path in chain(REMOVE_FILES, *remove_globs):
         LOGGER.info('Removing: %s', path)
-        chroot(mountpoint, path).unlink()
+        chroot(args.root, path).unlink()
 
     LOGGER.info('Clearing journal.')
-    vacuum(root=mountpoint, verbose=args.verbose)
+    vacuum(root=args.root, verbose=args.verbose)
     LOGGER.info('removing dotfiles.')
-    rmdotfiles(root=mountpoint)
+    rmdotfiles(root=args.root)
+    return 0
 
 
 def main():
@@ -79,13 +82,10 @@ def main():
     basicConfig(format=FORMAT, level=DEBUG if args.debug else INFO)
 
     try:
-        with EnsuredMountpoint(args.target) as mountpoint:
-            reset(mountpoint, args)
-    except NotAMountPointOrBlockDevice:
-        LOGGER.error('Target %s is neither a mount point, nor a block device.',
-                     args.target)
-        exit(1)
+        returncode = reset(args)
     except CalledProcessError as error:
         LOGGER.critical('Subprocess error.')
         LOGGER.error(error)
         exit(error.returncode)
+
+    exit(returncode)
