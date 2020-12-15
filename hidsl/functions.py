@@ -66,7 +66,7 @@ def returning(typ: type):
     def decorator(function: Callable):
         """Returns a wrapper function to coerce the return value."""
         @wraps(function)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs) -> typ:
             """Retuns the result from the function
             casted to the given type.
             """
