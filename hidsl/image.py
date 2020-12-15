@@ -11,10 +11,10 @@ from tempfile import TemporaryDirectory
 from typing import Union
 
 from hidsl.bsdtar import create
-from hidsl.device import Device
+from hidsl.exceptions import NotAMountPointOrBlockDevice
 from hidsl.functions import chroot
 from hidsl.logging import FORMAT, LOGGER
-from hidsl.mount import MountContext
+from hidsl.mount import EnsuredMountpoint, MountContext
 from hidsl.types import Filesystem, Partition
 
 
@@ -79,28 +79,6 @@ def from_mountpoint(mountpoint: Path, args: Namespace) -> int:
     return make_image(mountpoint, file, args)
 
 
-def from_block_device(device: Device, args: Namespace) -> int:
-    """Creates an image from a block device."""
-
-    with TemporaryDirectory() as tmp:
-        with MountContext(tmp, device.partitions, verbose=args.verbose) as mnt:
-            return from_mountpoint(mnt, args)
-
-
-def mkhidslimg(args: Namespace) -> int:
-    """Creates a HIDSL image."""
-
-    if args.source.is_mount():
-        return from_mountpoint(args.source, args)
-
-    if args.source.is_block_device():
-        return from_block_device(Device(args.source), args)
-
-    LOGGER.error('Source %s is neither a mount point, nor a block device.',
-                 args.source)
-    return 1
-
-
 def main():
     """Runs the program."""
 
@@ -108,7 +86,12 @@ def main():
     basicConfig(format=FORMAT, level=DEBUG if args.debug else INFO)
 
     try:
-        returncode = mkhidslimg(args)
+        with EnsuredMountpoint(args.source) as mountpoint:
+            returncode = from_mountpoint(mountpoint, args)
+    except NotAMountPointOrBlockDevice:
+        LOGGER.error('Source %s is neither a mount point, nor a block device.',
+                     args.source)
+        exit(1)
     except CalledProcessError as error:
         LOGGER.critical('Subprocess error.')
         LOGGER.error(error)
