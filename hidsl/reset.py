@@ -7,7 +7,6 @@ from pathlib import Path
 from subprocess import CalledProcessError
 from sys import exit    # pylint: disable=W0622
 
-from hidsl.digsig import rmdotfiles
 from hidsl.fstab import FSTAB
 from hidsl.functions import chroot
 from hidsl.hostid import HOST_ID, HOSTNAME, MACHINE_ID
@@ -18,6 +17,7 @@ from hidsl.ssh import HOST_KEYS
 from hidsl.syslinux import AUTOUPDATE
 from hidsl.systemd import vacuum, disable, enable
 from hidsl.types import Glob
+from hidsl.users import rmdotfiles
 
 
 __all__ = ['main']

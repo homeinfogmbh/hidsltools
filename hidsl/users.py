@@ -21,6 +21,7 @@ def rmdotfiles(*, root: Union[Path, str] = '/'):
 
     rmsubtree(chroot(root, DATA))
 
-    for directory in DOT_DIRS:
+    for user in USERS:
+        home = gethome(user)
         LOGGER.debug('Removing: %s', directory)
         rmtree(chroot(root, HOME).joinpath(directory))
