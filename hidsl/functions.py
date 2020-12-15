@@ -1,8 +1,9 @@
 """Common functions."""
 
+from functools import wraps
 from pathlib import Path
 from subprocess import DEVNULL, CompletedProcess, check_output, run
-from typing import IO, Iterable, Union
+from typing import Callable, IO, Iterable, Union
 
 from hidsl.logging import LOGGER
 from hidsl.types import PasswdEntry
@@ -13,6 +14,7 @@ __all__ = [
     'chroot',
     'exe',
     'getent',
+    'returning',
     'rmsubtree'
 ]
 
@@ -56,6 +58,23 @@ def getent(user: str, *, root: Union[Path, str] = None) -> PasswdEntry:
 
     text = check_output(command)
     return PasswdEntry.from_string(text.strip())
+
+
+def returning(typ: type):
+    """Returns a decorator to coerce a callable's return value."""
+
+    def decorator(function: Callable):
+        """Returns a wrapper function to coerce the return value."""
+        @wraps(function)
+        def wrapper(*args, **kwargs):
+            """Retuns the result from the function
+            casted to the given type.
+            """
+            return typ(function(*args, **kwargs))
+
+        return wrapper
+
+    return decorator
 
 
 def rmsubtree(directory: Path):
