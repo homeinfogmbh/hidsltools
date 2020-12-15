@@ -33,13 +33,14 @@ def systemctl(*args: str, root: Union[Path, str] = None,
     exe(command, verbose=verbose)
 
 
-def disable(unit: str, root: Union[Path, str] = None, verbose: bool = False):
+def disable(unit: str, *, root: Union[Path, str] = None,
+            verbose: bool = False):
     """Disables a unit."""
 
     systemctl('disable', unit, root=root, verbose=verbose)
 
 
-def enable(unit: str, root: Union[Path, str] = None, verbose: bool = False):
+def enable(unit: str, *, root: Union[Path, str] = None, verbose: bool = False):
     """Enables a unit."""
 
     systemctl('enable', unit, root=root, verbose=verbose)
@@ -57,22 +58,23 @@ def journalctl(*args: str, root: Union[Path, str] = None,
     exe(command, verbose=verbose)
 
 
-def vacuum_size(size: int, root: Union[Path, str] = None,
+def vacuum_size(size: int, *, root: Union[Path, str] = None,
                 verbose: bool = False):
     """Empties the journal by size."""
 
     journalctl('--vacuum-size', str(size), root=root, verbose=verbose)
 
 
-def vacuum_time(time: int, root: Union[Path, str] = None,
+def vacuum_time(time: int, *, root: Union[Path, str] = None,
                 verbose: bool = False):
     """Empties the journal by time."""
 
     journalctl('--vacuum-time', str(time), root=root, verbose=verbose)
 
 
-def vacuum(*, root: Union[Path, str] = None, verbose: bool = False):
+def vacuum(value: int = 1, *, root: Union[Path, str] = None,
+           verbose: bool = False):
     """Clears the journal."""
 
-    vacuum_size(1, root=root, verbose=verbose)
-    vacuum_time(1, root=root, verbose=verbose)
+    vacuum_size(value, root=root, verbose=verbose)
+    vacuum_time(value, root=root, verbose=verbose)
