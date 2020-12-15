@@ -24,4 +24,4 @@ MELODY = Melody(
 def beep(*, melody: Melody = MELODY, verbose: bool = False):
     """Beeps the given melody."""
 
-    exe([BEEP, *melody.commands], verbose=verbose)
+    exe([BEEP, *melody.command], verbose=verbose)
