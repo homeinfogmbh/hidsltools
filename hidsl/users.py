@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Union
 
-from hidsl.functions import chroot, rmsubtree, rmtree
+from hidsl.functions import chroot, getent, rmsubtree
 from hidsl.logging import LOGGER
 
 
@@ -11,9 +11,7 @@ __all__ = ['rmdotfiles']
 
 
 DATA = Path('/usr/share/digsig')
-DOT_DIRS = {'.adobe', '.appdata', '.macromedia'}
-HOME = Path('/var/lib/digsig')
-USER = 'digsig'
+USERS = {'digsig', 'hidslcfg', 'homeinfo', 'root'}
 
 
 def rmdotfiles(*, root: Union[Path, str] = '/'):
@@ -21,7 +19,7 @@ def rmdotfiles(*, root: Union[Path, str] = '/'):
 
     rmsubtree(chroot(root, DATA))
 
-    for user in USERS:
-        home = gethome(user)
-        LOGGER.debug('Removing: %s', directory)
-        rmtree(chroot(root, HOME).joinpath(directory))
+    for user in sorted(USERS):
+        home = getent(user).home
+        LOGGER.debug('Cleaning home %s of user %s.', home, user)
+        rmsubtree(chroot(root, home))

@@ -14,7 +14,8 @@ __all__ = [
     'Glob',
     'Melody',
     'Note',
-    'Partition'
+    'Partition',
+    'PasswdEntry'
 ]
 
 
@@ -121,3 +122,21 @@ class Partition(NamedTuple):
     mountpoint: Path
     device: Union[Path, str]
     filesystem: Filesystem
+
+
+class PasswdEntry(NamedTuple):
+    """An entry of /etc/passwd."""
+
+    name: str
+    passwd: str
+    uid: int
+    gid: int
+    gecos: str
+    home: Path
+    shell: str
+
+    @classmethod
+    def from_string(cls, string: str, *, sep: str = ':'):
+        """Creates the passwd entry from a string."""
+        name, passwd, uid, gid, gecos, home, shell = string.split(sep)
+        return cls(name, passwd, int(uid), int(gid), gecos, Path(home), shell)

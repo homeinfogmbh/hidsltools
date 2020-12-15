@@ -2,16 +2,26 @@
 
 from functools import wraps
 from pathlib import Path
-from subprocess import DEVNULL, CompletedProcess, run
+from subprocess import DEVNULL, CompletedProcess, check_output, run
 from typing import Callable, IO, Iterable, Union
 
 from hidsl.logging import LOGGER
+from hidsl.types import PasswdEntry
 
 
-__all__ = ['arch_chroot', 'chroot', 'exe', 'returning', 'rmsubtree', 'rmtree']
+__all__ = [
+    'arch_chroot',
+    'chroot',
+    'exe',
+    'getent',
+    'returning',
+    'rmsubtree',
+    'rmtree'
+]
 
 
 ARCH_CHROOT = '/usr/bin/arch-chroot'
+GETENT = '/usr/bin/getent'
 
 
 def arch_chroot(root: Union[Path, str], command: Iterable[str]):
@@ -37,6 +47,18 @@ def exe(command, *, input: bytes = None,    # pylint: disable=W0622
     stdout = stdout if stdout is not None else None if verbose else DEVNULL
     LOGGER.debug('Running command: %s', command)
     return run(command, input=input, check=True, stderr=stderr, stdout=stdout)
+
+
+def getent(user: str, *, root: Union[Path, str] = None) -> PasswdEntry:
+    """Returns the home of the user."""
+
+    command = [GETENT, 'passwd', user]
+
+    if root is not None:
+        command = arch_chroot(root, command)
+
+    text = check_output(command)
+    return PasswdEntry.from_string(text.strip())
 
 
 def returning(typ: type):
