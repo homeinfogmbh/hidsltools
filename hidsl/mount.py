@@ -37,7 +37,7 @@ class MountContext:
                  partitions: Iterable[Partition], *, verbose: bool = False):
         """Sets the partitions."""
         self.mountpoint = Path(mountpoint)
-        self.partitions = sorted(partitions)
+        self.partitions = partitions
         self.verbose = verbose
 
     def __enter__(self):
@@ -49,14 +49,14 @@ class MountContext:
 
     def mount(self):
         """Mounts all partitions to the mountpoint."""
-        for partition in self.partitions:
+        for partition in sorted(self.partitions):
             mountpoint = chroot(self.mountpoint, partition.mountpoint)
             LOGGER.debug('Mounting %s to %s.', partition.device, mountpoint)
             mount(partition.device, mountpoint, verbose=self.verbose)
 
     def umount(self):
         """Mounts all partitions to the mountpoint."""
-        for partition in reversed(self.partitions):
+        for partition in sorted(self.partitions, reverse=True):
             mountpoint = chroot(self.mountpoint, partition.mountpoint)
             LOGGER.debug('Umounting %s.', mountpoint)
             umount(mountpoint, verbose=self.verbose)
