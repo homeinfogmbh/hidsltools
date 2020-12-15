@@ -13,7 +13,7 @@ setup(
     maintainer_email='r.neumann@homeinfo.de',
     python_requires='>=3.8',
     packages=['hidsl'],
-    scripts=['files/hireset', 'files/hirestore', 'files/mkhidslimg'],
+    scripts=['scripts/hireset', 'scripts/hirestore', 'scripts/mkhidslimg'],
     url='https://github.com/homeinfogmbh/hidsltools',
     license='GPLv3',
     description='Image tools for HOMEINFO Digital Signage Linux systems.'

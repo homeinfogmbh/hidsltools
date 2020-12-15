@@ -3,17 +3,59 @@
 from __future__ import annotations
 from enum import Enum
 from pathlib import Path
-from typing import Generator, NamedTuple
+from re import Pattern
+from typing import Generator, NamedTuple, Union
 
 
-__all__ = ['Enum', 'Glob', 'Melody', 'Note', 'Partition']
+__all__ = [
+    'Compression',
+    'DeviceType',
+    'Enum',
+    'Glob',
+    'Melody',
+    'Note',
+    'Partition'
+]
+
+
+class Compression(Enum):
+    """Compression types."""
+
+    XZ = 'xz'
+    BZIP2 = 'bzip2'
+    LRZIP = 'lrzip'
+    LZ4 = 'lz4'
+    ZSTD = 'zstd'
+    LZMA = 'lzma'
+    LZOP = 'lzop'
+    GZIP = 'gzip'
+
+    @property
+    def bsdtar_arg(self):
+        """Returns the corresponding argument for bsdtar."""
+        return f'--{self.value}'
+
+
+class DeviceType(NamedTuple):
+    """Block device types."""
+
+    regex: Pattern
+    infix: str = ''
+
+    def check(self, path: Path) -> bool:
+        """Checks is the given path is a device of this type."""
+        return self.regex.fullmatch(path.stem) and path.is_block_device()
 
 
 class Filesystem(Enum):
     """Known file systems."""
 
-    FAT32 = 'fat32'
+    CIFS = 'cifs'
     EXT4 = 'ext4'
+    FAT32 = 'fat32'
+
+    def __str__(self):  # pylint: disable=E0307
+        return self.value
 
 
 class Glob:
@@ -77,5 +119,5 @@ class Partition(NamedTuple):
     """A partition."""
 
     mountpoint: Path
-    device: Path
-    filesystem: str
+    device: Union[Path, str]
+    filesystem: Filesystem

@@ -71,8 +71,11 @@ def restore(args: Namespace):
         wipefs(args.device, verbose=args.verbose)
 
     LOGGER.info('Partitioning disk: %s', args.device)
-    partitions = set(mkparts(args.device, mbr=args.mbr, verbose=args.verbose))
-    LOGGER.debug('Created partitions: %s', partitions)
+    partitions = mkparts(args.device, mbr=args.mbr, verbose=args.verbose)
+
+    for partition in partitions:
+        LOGGER.debug('Created partition: %s', partition)
+
     LOGGER.info('Creating file systems.')
 
     for partition in partitions:

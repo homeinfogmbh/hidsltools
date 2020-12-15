@@ -2,73 +2,49 @@
 
 from re import compile  # pylint: disable=W0622
 from pathlib import Path
-from typing import Tuple, Union
+from typing import Union
+
+from hidsl.types import DeviceType
 
 
 __all__ = ['Device']
 
 
-EMMC = compile('mmcblk([0-9])')
-NVME = compile('nvme([0-9])n([0-9])')
-SDX = compile('sd([a-z])')
-
-
-def is_valid(device: Path) -> bool:
-    """Checks whether the device is valid."""
-
-    if EMMC.fullmatch(device.stem) is not None:
-        return device.is_file()
-
-    if EMMC.fullmatch(device.stem) is not None:
-        return device.is_file()
-
-    if SDX.fullmatch(device.stem) is not None:
-        return device.is_file()
-
-    return False
+EMMC = DeviceType(compile('mmcblk([0-9])'), 'p')
+NVME = DeviceType(compile('nvme([0-9])n([0-9])'), 'p')
+SDX = DeviceType(compile('sd([a-z])'))
+DEVICE_TYPES = {EMMC, NVME, SDX}
 
 
 class Device:
     """A block device."""
 
-    def __init__(self, path: Union[Path, str]):
+    def __init__(self, path: Union[Path, str], *, devtype: DeviceType = None):
         """Sets the path."""
-        self._path = path = Path(path)
+        self.path = Path(path)
 
-        if not is_valid(path):
-            raise ValueError('Unknown block device type:', path.stem)
+        if devtype is None:
+            for devtype in DEVICE_TYPES:    # pylint: disable=R1704
+                if devtype.check(self.path):
+                    break
+            else:
+                raise ValueError('Unknown block device type:', self.path)
+
+        self.devtype = devtype
 
     def __getattr__(self, attr):
         """Delegates to the path."""
-        return getattr(self._path, attr)
+        return getattr(self.path, attr)
 
     def __str__(self):
         """Delegates to the path."""
-        return str(self._path)
+        return str(self.path)
 
     @property
-    def devno(self) -> Union[int, Tuple[int, int], str]:
-        """Returns the device number."""
-        if (match := EMMC.fullmatch(self.stem)) is not None:
-            return int(match.group(1))
-
-        if (match := EMMC.fullmatch(self.stem)) is not None:
-            return (int(match.group(1)), int(match.group(2)))
-
-        if (match := SDX.fullmatch(self.stem)) is not None:
-            return match.group(1)
-
-        raise ValueError('Unknown block device type:', self.stem)
+    def partitions(self):
+        """Yields available partitions."""
+        return self.parent.glob(f'{self.stem}{self.devtype.infix}[0-9]')
 
     def partition(self, index: int):
         """Returns the respective partition."""
-        if EMMC.fullmatch(self.stem) is not None:
-            return self.parent.joinpath(f'{self.stem}p{index}')
-
-        if EMMC.fullmatch(self.stem) is not None:
-            return self.parent.joinpath(f'{self.stem}p{index}')
-
-        if SDX.fullmatch(self.stem) is not None:
-            return self.parent.joinpath(f'{self.stem}{index}')
-
-        raise ValueError('Unknown block device type:', self.stem)
+        return self.parent.joinpath(f'{self.stem}{self.devtype.infix}{index}')

@@ -1,13 +1,14 @@
 """Common functions."""
 
+from functools import wraps
 from pathlib import Path
 from subprocess import DEVNULL, CompletedProcess, run
-from typing import IO, Iterable, Union
+from typing import Callable, IO, Iterable, Union
 
 from hidsl.logging import LOGGER
 
 
-__all__ = ['arch_chroot', 'chroot', 'exe', 'rmsubtree', 'rmtree']
+__all__ = ['arch_chroot', 'chroot', 'exe', 'returning', 'rmsubtree', 'rmtree']
 
 
 ARCH_CHROOT = '/usr/bin/arch-chroot'
@@ -36,6 +37,23 @@ def exe(command, *, input: bytes = None,    # pylint: disable=W0622
     stdout = stdout if stdout is not None else None if verbose else DEVNULL
     LOGGER.debug('Running command: %s', command)
     return run(command, input=input, check=True, stderr=stderr, stdout=stdout)
+
+
+def returning(typ: type):
+    """Returns a decorator to coerce a callable's return value."""
+
+    def decorator(function: Callable):
+        """Returns a wrapper function to coerce the return value."""
+        @wraps(function)
+        def wrapper(*args, **kwargs):
+            """Retuns the result from the function
+            casted to the given type.
+            """
+            return typ(function(*args, **kwargs))
+
+        return wrapper
+
+    return decorator
 
 
 def rmsubtree(directory: Path):
