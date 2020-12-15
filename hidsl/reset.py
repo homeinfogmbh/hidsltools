@@ -17,6 +17,7 @@ from hidsl.openvpn import delete_client_config
 from hidsl.ssh import HOST_KEYS
 from hidsl.syslinux import AUTOUPDATE
 from hidsl.systemd import vacuum, disable, enable
+from hidsl.types import Glob
 
 
 __all__ = ['main']
@@ -54,8 +55,12 @@ def reset(args: Namespace):
     enable(WARNING, root=args.mountpoint, verbose=args.verbose)
     LOGGER.info('Removing OpenVPN client configuration.')
     delete_client_config(root=args.mountpoint)
+    remove_globs = [
+        Glob(chroot(args.chroot, glob.path), glob.glob)
+        for glob in REMOVE_GLOBS
+    ]
 
-    for path in chain(REMOVE_FILES, *REMOVE_GLOBS):
+    for path in chain(REMOVE_FILES, *remove_globs):
         LOGGER.info('Removing: %s', path)
         chroot(args.mountpoint, path).unlink()
 
