@@ -7,6 +7,7 @@ from pathlib import Path
 from subprocess import CalledProcessError
 from sys import exit    # pylint: disable=W0622
 
+from hidsl.digsig import rmdotfiles
 from hidsl.fstab import FSTAB
 from hidsl.functions import chroot
 from hidsl.hostid import HOST_ID, HOSTNAME, MACHINE_ID
@@ -15,7 +16,7 @@ from hidsl.logging import FORMAT, LOGGER
 from hidsl.openvpn import delete_client_config
 from hidsl.ssh import HOST_KEYS
 from hidsl.syslinux import AUTOUPDATE
-from hidsl.systemd import clear, disable, enable
+from hidsl.systemd import vacuum, disable, enable
 
 
 __all__ = ['main']
@@ -58,7 +59,10 @@ def reset(args: Namespace):
         LOGGER.info('Removing: %s', path)
         chroot(args.mountpoint, path).unlink()
 
-    clear(root=args.mountpoint, verbose=args.verbose)
+    LOGGER.info('Clearing journal.')
+    vacuum(root=args.mountpoint, verbose=args.verbose)
+    LOGGER.info('removing dotfiles.')
+    rmdotfiles(root=args.mountpoint)
 
 
 def main():

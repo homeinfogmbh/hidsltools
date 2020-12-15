@@ -7,11 +7,11 @@ from hidsl.functions import exe
 
 
 __all__ = [
-    'clear',
     'disable',
     'enable',
     'journalctl',
     'systemctl',
+    'vacuum',
     'vacuum_size',
     'vacuum_time'
 ]
@@ -71,7 +71,7 @@ def vacuum_time(time: int, root: Union[Path, str] = None,
     journalctl('--vacuum-time', str(time), root=root, verbose=verbose)
 
 
-def clear(*, root: Union[Path, str] = None, verbose: bool = False):
+def vacuum(*, root: Union[Path, str] = None, verbose: bool = False):
     """Clears the journal."""
 
     vacuum_size(1, root=root, verbose=verbose)
