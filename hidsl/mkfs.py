@@ -1,22 +1,15 @@
 """File system creation."""
 
-from enum import Enum
 from pathlib import Path
 
 from hidsl.functions import exe
+from hidsl.types import Filesystem
 
 
-__all__ = ['Filesystem', 'mkfs']
+__all__ = ['mkfs']
 
 
 MKFS = '/usr/bin/mkfs'
-
-
-class Filesystem(Enum):
-    """Known file systems."""
-
-    FAT32 = 'fat32'
-    EXT4 = 'ext4'
 
 
 def mkfat32(device: Path, *, label: str = None, verbose: bool = False):

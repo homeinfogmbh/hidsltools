@@ -5,8 +5,7 @@ from typing import Generator
 
 from hidsl.device import Device
 from hidsl.functions import exe
-from hidsl.mkfs import Filesystem
-from hidsl.types import Partition
+from hidsl.types import Filesystem, Partition
 
 
 __all__ = ['mkparts']

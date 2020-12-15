@@ -1,11 +1,19 @@
 """Common data types."""
 
 from __future__ import annotations
+from enum import Enum
 from pathlib import Path
 from typing import Generator, NamedTuple
 
 
-__all__ = ['Glob', 'Melody', 'Note', 'Partition']
+__all__ = ['Enum', 'Glob', 'Melody', 'Note', 'Partition']
+
+
+class Filesystem(Enum):
+    """Known file systems."""
+
+    FAT32 = 'fat32'
+    EXT4 = 'ext4'
 
 
 class Glob:
