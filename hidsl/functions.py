@@ -15,8 +15,7 @@ __all__ = [
     'exe',
     'getent',
     'returning',
-    'rmsubtree',
-    'rmtree'
+    'rmsubtree'
 ]
 
 
@@ -86,10 +85,3 @@ def rmsubtree(directory: Path):
             rmsubtree(inode)
 
         inode.unlink()
-
-
-def rmtree(directory: Path):
-    """Recursively removes the given directory and all of its contents."""
-
-    rmsubtree(directory)
-    directory.unlink()
