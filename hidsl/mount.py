@@ -4,7 +4,7 @@ from pathlib import Path
 from subprocess import CompletedProcess
 from typing import Iterable, Union
 
-from hidsl.functions import exe
+from hidsl.functions import chroot, exe
 from hidsl.logging import LOGGER
 from hidsl.types import Partition
 
@@ -34,11 +34,10 @@ class MountContext:
     """Context manager for mounts."""
 
     def __init__(self, mountpoint: Union[Path, str],
-                 partitions: Iterable[Partition], *,
-                 verbose: bool = False):
+                 partitions: Iterable[Partition], *, verbose: bool = False):
         """Sets the partitions."""
         self.mountpoint = Path(mountpoint)
-        self.partitions = partitions
+        self.partitions = sorted(partitions)
         self.verbose = verbose
 
     def __enter__(self):
@@ -51,13 +50,13 @@ class MountContext:
     def mount(self):
         """Mounts all partitions to the mountpoint."""
         for partition in self.partitions:
-            mountpoint = partition.chroot(self.mountpoint)
+            mountpoint = chroot(self.mountpoint, partition.mountpoint)
             LOGGER.debug('Mounting %s to %s.', partition.device, mountpoint)
             mount(partition.device, mountpoint, verbose=self.verbose)
 
     def umount(self):
         """Mounts all partitions to the mountpoint."""
         for partition in reversed(self.partitions):
-            mountpoint = partition.chroot(self.mountpoint)
+            mountpoint = chroot(self.mountpoint, partition.mountpoint)
             LOGGER.debug('Umounting %s.', mountpoint)
             umount(mountpoint, verbose=self.verbose)

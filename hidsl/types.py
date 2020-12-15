@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 from pathlib import Path
-from typing import Generator, NamedTuple, Union
-
-from hidsl.functions import chroot
+from typing import Generator, NamedTuple
 
 
 __all__ = ['Glob', 'Melody', 'Note', 'Partition']
@@ -70,13 +68,6 @@ class Note(NamedTuple):
 class Partition(NamedTuple):
     """A partition."""
 
-    mountpoint: Union[Path, str, None]
+    mountpoint: Path
     device: Path
     filesystem: str
-
-    def chroot(self, root: Path) -> Path:
-        """Returns a chrooted path."""
-        if not self.mountpoint:
-            return root
-
-        return chroot(root, self.mountpoint)

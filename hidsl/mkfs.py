@@ -17,7 +17,6 @@ class Filesystem(Enum):
 
     FAT32 = 'fat32'
     EXT4 = 'ext4'
-    BTRFS = 'btrfs'
 
 
 def mkfat32(device: Path, *, label: str = None, verbose: bool = False):
@@ -54,7 +53,4 @@ def mkfs(device: Path, filesystem: Filesystem, *, label: str = None,
     if filesystem == Filesystem.EXT4:
         return mkext4(device, label=label, verbose=verbose)
 
-    if filesystem == Filesystem.BTRFS:
-        raise NotImplementedError('File system not implemented:', filesystem)
-
-    raise ValueError('Invalid file system:', filesystem)
+    raise NotImplementedError('File system not implemented:', filesystem)

@@ -15,8 +15,8 @@ from hidsl.fstab import genfstab
 from hidsl.hostid import mkhostid
 from hidsl.initcpio import mkinitcpio
 from hidsl.logging import FORMAT, LOGGER
-from hidsl.mkfs import Filesystem, mkfs
-from hidsl.mount import MountContext, Partition
+from hidsl.mkfs import mkfs
+from hidsl.mount import MountContext
 from hidsl.sgdisk import mkparts
 from hidsl.ssh import generate_host_keys
 from hidsl.syslinux import install_update
@@ -71,17 +71,8 @@ def restore(args: Namespace):
         wipefs(args.device, verbose=args.verbose)
 
     LOGGER.info('Partitioning disk: %s', args.device)
-    first, *other = mkparts(args.device, mbr=args.mbr, verbose=args.verbose)
-    LOGGER.debug('Created partitions: %s', [first, *other])
-
-    if other:
-        partitions = [
-            Partition('/', other[0], Filesystem.EXT4),
-            Partition('/boot', first, Filesystem.FAT32)
-        ]
-    else:
-        partitions = [Partition('/', first, Filesystem.EXT4)]
-
+    partitions = set(mkparts(args.device, mbr=args.mbr, verbose=args.verbose))
+    LOGGER.debug('Created partitions: %s', partitions)
     LOGGER.info('Creating file systems.')
 
     for partition in partitions:

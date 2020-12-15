@@ -1,13 +1,15 @@
 """Partitioning."""
 
+from pathlib import Path
 from typing import Generator
 
 from hidsl.device import Device
 from hidsl.functions import exe
+from hidsl.mkfs import Filesystem
 from hidsl.types import Partition
 
 
-__all__ = ['Partition', 'mkparts']
+__all__ = ['mkparts']
 
 
 SGDISK = '/usr/bin/sgdisk'
@@ -37,7 +39,7 @@ def mkparts(device: Device, *, mbr: bool = False,
     if not mbr:
         root_partno = 2
         mkefipart(device, verbose=verbose)
-        yield device.partition(1)
+        yield Partition(Path('/boot'), device.partition(1), Filesystem.FAT32)
 
     mkroot(device, partno=root_partno, verbose=verbose)
-    yield device.partition(root_partno)
+    yield Partition(Path('/'), device.partition(root_partno), Filesystem.EXT4)
