@@ -37,7 +37,7 @@ class Melody(list):
         return super().__new__(cls, notes)
 
     @property
-    def command(self) -> Generator[str, None, None]:
+    def commands(self) -> Generator[str, None, None]:
         """Yields corresponsing beep commands."""
         try:
             first, *rest = self
