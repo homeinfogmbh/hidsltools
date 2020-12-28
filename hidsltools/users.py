@@ -3,8 +3,8 @@
 from pathlib import Path
 from typing import Union
 
-from hidsl.functions import chroot, getent, rmsubtree
-from hidsl.logging import LOGGER
+from hidsltools.functions import chroot, getent, rmsubtree
+from hidsltools.logging import LOGGER
 
 
 __all__ = ['rmdotfiles']

@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Union
 
-from hidsl.functions import chroot, rmsubtree
+from hidsltools.functions import chroot, rmsubtree
 
 
 __all__ = ['delete_client_config']

@@ -3,8 +3,8 @@
 from pathlib import Path
 from typing import Union
 
-from hidsl.functions import arch_chroot, exe
-from hidsl.types import Glob
+from hidsltools.functions import arch_chroot, exe
+from hidsltools.types import Glob
 
 
 __all__ = ['INITRAMFS', 'mkinitcpio']

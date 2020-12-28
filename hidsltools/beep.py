@@ -1,7 +1,7 @@
 """Audio notifications via PC speaker."""
 
-from hidsl.functions import exe
-from hidsl.types import Melody, Note
+from hidsltools.functions import exe
+from hidsltools.types import Melody, Note
 
 
 __all__ = ['beep']

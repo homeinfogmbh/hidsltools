@@ -3,8 +3,8 @@
 from pathlib import Path
 from typing import Union
 
-from hidsl.functions import chroot, exe
-from hidsl.types import Glob
+from hidsltools.functions import chroot, exe
+from hidsltools.types import Glob
 
 
 __all__ = ['HOST_KEYS', 'generate_host_keys']

@@ -3,9 +3,9 @@
 from pathlib import Path
 from typing import Iterable, Union
 
-from hidsl.functions import chroot, exe
-from hidsl.logging import LOGGER
-from hidsl.types import Filesystem, Partition
+from hidsltools.functions import chroot, exe
+from hidsltools.logging import LOGGER
+from hidsltools.types import Filesystem, Partition
 
 
 __all__ = ['MountContext']

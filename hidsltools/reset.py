@@ -7,17 +7,17 @@ from pathlib import Path
 from subprocess import CalledProcessError
 from sys import exit    # pylint: disable=W0622
 
-from hidsl.fstab import FSTAB
-from hidsl.functions import chroot
-from hidsl.hostid import HOST_ID, HOSTNAME, MACHINE_ID
-from hidsl.initcpio import INITRAMFS
-from hidsl.logging import FORMAT, LOGGER
-from hidsl.openvpn import delete_client_config
-from hidsl.ssh import HOST_KEYS
-from hidsl.syslinux import AUTOUPDATE
-from hidsl.systemd import vacuum, disable, enable
-from hidsl.types import Glob
-from hidsl.users import rmdotfiles
+from hidsltools.fstab import FSTAB
+from hidsltools.functions import chroot
+from hidsltools.hostid import HOST_ID, HOSTNAME, MACHINE_ID
+from hidsltools.initcpio import INITRAMFS
+from hidsltools.logging import FORMAT, LOGGER
+from hidsltools.openvpn import delete_client_config
+from hidsltools.ssh import HOST_KEYS
+from hidsltools.syslinux import AUTOUPDATE
+from hidsltools.systemd import vacuum, disable, enable
+from hidsltools.types import Glob
+from hidsltools.users import rmdotfiles
 
 
 __all__ = ['main']

@@ -1,7 +1,7 @@
 """File system wiping."""
 
-from hidsl.device import Device
-from hidsl.functions import exe
+from hidsltools.device import Device
+from hidsltools.functions import exe
 
 
 __all__ = ['wipefs']

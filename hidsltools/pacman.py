@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Union
 
-from hidsl.functions import exe
+from hidsltools.functions import exe
 
 
 __all__ = ['LOCKFILE', 'clean']

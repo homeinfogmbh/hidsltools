@@ -3,9 +3,9 @@
 from pathlib import Path
 from typing import Generator
 
-from hidsl.device import Device
-from hidsl.functions import exe, returning
-from hidsl.types import Filesystem, Partition
+from hidsltools.device import Device
+from hidsltools.functions import exe, returning
+from hidsltools.types import Filesystem, Partition
 
 
 __all__ = ['mkparts']

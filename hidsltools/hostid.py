@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Union
 from uuid import uuid4
 
-from hidsl.functions import chroot
+from hidsltools.functions import chroot
 
 
 __all__ = ['HOST_ID', 'HOSTNAME', 'MACHINE_ID', 'mkhostid']

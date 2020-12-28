@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from hidsl.device import Device
+from hidsltools.device import Device
 
 
 __all__ = ['DEVICE', 'IMAGE']

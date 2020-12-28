@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from hidsl.functions import exe
-from hidsl.types import Filesystem
+from hidsltools.functions import exe
+from hidsltools.types import Filesystem
 
 
 __all__ = ['mkfs']

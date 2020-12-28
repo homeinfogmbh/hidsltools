@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from hidsl.functions import exe
-from hidsl.types import Compression
+from hidsltools.functions import exe
+from hidsltools.types import Compression
 
 
 __all__ = ['create', 'extract']

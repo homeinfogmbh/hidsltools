@@ -7,20 +7,20 @@ from subprocess import CalledProcessError
 from sys import exit    # pylint: disable=W0622
 from tempfile import TemporaryDirectory
 
-from hidsl.beep import beep
-from hidsl.bsdtar import extract
-from hidsl.device import Device
-from hidsl.defaults import DEVICE, IMAGE
-from hidsl.fstab import genfstab
-from hidsl.hostid import mkhostid
-from hidsl.initcpio import mkinitcpio
-from hidsl.logging import FORMAT, LOGGER
-from hidsl.mkfs import mkfs
-from hidsl.mount import MountContext
-from hidsl.sgdisk import mkparts
-from hidsl.ssh import generate_host_keys
-from hidsl.syslinux import install_update
-from hidsl.wipefs import wipefs
+from hidsltools.beep import beep
+from hidsltools.bsdtar import extract
+from hidsltools.device import Device
+from hidsltools.defaults import DEVICE, IMAGE
+from hidsltools.fstab import genfstab
+from hidsltools.hostid import mkhostid
+from hidsltools.initcpio import mkinitcpio
+from hidsltools.logging import FORMAT, LOGGER
+from hidsltools.mkfs import mkfs
+from hidsltools.mount import MountContext
+from hidsltools.sgdisk import mkparts
+from hidsltools.ssh import generate_host_keys
+from hidsltools.syslinux import install_update
+from hidsltools.wipefs import wipefs
 
 
 __all__ = ['main']

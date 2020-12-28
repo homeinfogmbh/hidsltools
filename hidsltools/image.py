@@ -10,11 +10,11 @@ from sys import exit    # pylint: disable=W0622
 from tempfile import TemporaryDirectory
 from typing import Union
 
-from hidsl.bsdtar import create
-from hidsl.functions import chroot
-from hidsl.logging import FORMAT, LOGGER
-from hidsl.mount import MountContext
-from hidsl.types import Filesystem, Partition
+from hidsltools.bsdtar import create
+from hidsltools.functions import chroot
+from hidsltools.logging import FORMAT, LOGGER
+from hidsltools.mount import MountContext
+from hidsltools.types import Filesystem, Partition
 
 
 __all__ = ['main']

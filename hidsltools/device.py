@@ -4,7 +4,7 @@ from re import compile  # pylint: disable=W0622
 from pathlib import Path
 from typing import Union
 
-from hidsl.types import DeviceType
+from hidsltools.types import DeviceType
 
 
 __all__ = ['Device']

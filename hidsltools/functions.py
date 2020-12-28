@@ -5,8 +5,8 @@ from pathlib import Path
 from subprocess import DEVNULL, CompletedProcess, check_output, run
 from typing import Callable, IO, Iterable, Union
 
-from hidsl.logging import LOGGER
-from hidsl.types import PasswdEntry
+from hidsltools.logging import LOGGER
+from hidsltools.types import PasswdEntry
 
 
 __all__ = [
