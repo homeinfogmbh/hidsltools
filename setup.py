@@ -4,7 +4,7 @@
 from setuptools import setup
 
 setup(
-    name='hidsl',
+    name='hidsltools',
     version_format='{tag}',
     setup_requires=['setuptools-git-version'],
     author='HOMEINFO - Digitale Informationssysteme GmbH',
@@ -13,7 +13,13 @@ setup(
     maintainer_email='r.neumann@homeinfo.de',
     python_requires='>=3.8',
     packages=['hidsl'],
-    scripts=['scripts/hireset', 'scripts/hirestore', 'scripts/mkhidslimg'],
+    entry_points={
+        'console_scripts': [
+            'hireset = hidsltools.reset:main',
+            'hirestore = hidsltools.restore:main',
+            'mkhidslimg = hidsltools.image:main',
+        ],
+    },
     url='https://github.com/homeinfogmbh/hidsltools',
     license='GPLv3',
     description='Image tools for HOMEINFO Digital Signage Linux systems.'
