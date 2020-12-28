@@ -72,7 +72,7 @@ class Glob:
         return self.path.glob(self.glob)
 
 
-class Melody(list):
+class Melody(tuple):
     """A melody of notes."""
 
     def __new__(cls, *notes: Note) -> Melody:
