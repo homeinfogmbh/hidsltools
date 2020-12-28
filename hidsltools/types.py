@@ -72,12 +72,12 @@ class Glob:
         return self.path.glob(self.glob)
 
 
-class Melody(tuple):
+class Melody(list):
     """A melody of notes."""
 
-    def __new__(cls, *notes: Note) -> Melody:
+    def __init__(cls, *notes: Note) -> Melody:
         """Creates a new melody from the given notes."""
-        return super().__new__(cls, notes)
+        return super().__init__(notes)
 
     @property
     def commands(self) -> Generator[str, None, None]:
