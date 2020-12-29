@@ -4,7 +4,7 @@ from __future__ import annotations
 from enum import Enum
 from pathlib import Path
 from re import Pattern
-from typing import Generator, NamedTuple, Union
+from typing import Iterator, NamedTuple, Union
 
 
 __all__ = [
@@ -12,7 +12,6 @@ __all__ = [
     'DeviceType',
     'Enum',
     'Glob',
-    'Melody',
     'Note',
     'Partition',
     'PasswdEntry'
@@ -72,28 +71,6 @@ class Glob:
         return self.path.glob(self.glob)
 
 
-class Melody(list):
-    """A melody of notes."""
-
-    def __init__(cls, *notes: Note) -> Melody:
-        """Creates a new melody from the given notes."""
-        return super().__init__(notes)
-
-    @property
-    def commands(self) -> Generator[str, None, None]:
-        """Yields corresponsing beep commands."""
-        try:
-            first, *rest = self
-        except ValueError:
-            raise ValueError('Melody cannot be empty.') from None
-
-        yield from first.commands
-
-        for note in rest:
-            yield '-n'
-            yield from note.commands
-
-
 class Note(NamedTuple):
     """A note for a beep melody."""
 
@@ -102,8 +79,8 @@ class Note(NamedTuple):
     length: int = None
 
     @property
-    def commands(self) -> Generator[str, None, None]:
-        """Yields corresponding beep commands."""
+    def args(self) -> Iterator[str]:
+        """Yields arguments for the beep command."""
         yield '-f'
         yield str(self.frequency)
 

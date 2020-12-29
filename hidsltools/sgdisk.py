@@ -1,7 +1,7 @@
 """Partitioning."""
 
 from pathlib import Path
-from typing import Generator
+from typing import Iterator
 
 from hidsltools.device import Device
 from hidsltools.functions import exe, returning
@@ -30,7 +30,7 @@ def mkroot(device: Device, *, partno: int = 1, verbose: bool = False):
 
 @returning(sorted)
 def mkparts(device: Device, *, mbr: bool = False,
-            verbose: bool = False) -> Generator[Partition, None, None]:
+            verbose: bool = False) -> Iterator[Partition]:
     """Partitions a disk."""
 
     exe([SGDISK, '-og', str(device)], verbose=verbose)
