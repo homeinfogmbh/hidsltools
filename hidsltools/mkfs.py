@@ -15,7 +15,7 @@ MKFS = '/usr/bin/mkfs'
 def mkfat32(device: Path, *, label: str = None, verbose: bool = False):
     """Creates a FAT32 file system."""
 
-    command = [MKFS, '-t', 'vfat', '-F32']
+    command = [MKFS, '-t', 'vfat', '-F', '32']
 
     if label is not None:
         command += ['-n', label]
