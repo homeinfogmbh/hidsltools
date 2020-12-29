@@ -39,7 +39,7 @@ def mkparts(device: Device, *, mbr: bool = False,
     if not mbr:
         root_partno = 2
         mkefipart(device, verbose=verbose)
-        yield Partition(Path('/boot'), device.partition(1), Filesystem.FAT32)
+        yield Partition(Path('/boot'), device.partition(1), Filesystem.VFAT)
 
     mkroot(device, partno=root_partno, verbose=verbose)
     yield Partition(Path('/'), device.partition(root_partno), Filesystem.EXT4)

@@ -52,7 +52,7 @@ class Filesystem(Enum):
 
     CIFS = 'cifs'
     EXT4 = 'ext4'
-    FAT32 = 'fat32'
+    VFAT = 'vfat'
 
     def __str__(self):  # pylint: disable=E0307
         return self.value
