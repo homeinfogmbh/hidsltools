@@ -12,7 +12,7 @@ setup(
     maintainer='Richard Neumann',
     maintainer_email='r.neumann@homeinfo.de',
     python_requires='>=3.8',
-    packages=['hidsl'],
+    packages=['hidsltools'],
     entry_points={
         'console_scripts': [
             'hireset = hidsltools.reset:main',
