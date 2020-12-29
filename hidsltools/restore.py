@@ -104,4 +104,5 @@ def main():
     except CalledProcessError as error:
         LOGGER.critical('Subprocess error.')
         LOGGER.error(error)
+        LOGGER.debug(error.stderr)
         exit(error.returncode)
