@@ -49,22 +49,35 @@ def get_args() -> Namespace:
     return parser.parse_args()
 
 
-def restore_image(image: Path, mountpoint: Path, verbose: bool = False):
+def restore_image(args: Namespace, mountpoint: Path = None):
     """Restores an image."""
 
-    extract(image, mountpoint, verbose=verbose)
+    if mountpoint is None:
+        mountpoint = args.root
+
+    LOGGER.info('Restoring image.')
+    LOGGER.debug('Extracting image archive.')
+    extract(args.image, mountpoint, verbose=args.verbose)
+    LOGGER.debug('Creating a unique host ID.')
     mkhostid(root=mountpoint)
-    generate_host_keys(root=mountpoint, verbose=verbose)
-    genfstab(root=mountpoint, verbose=verbose)
-    install_update(chroot=mountpoint, verbose=verbose)
-    mkinitcpio(chroot=mountpoint, verbose=verbose)
+    LOGGER.debug('Generating SSH host keys.')
+    generate_host_keys(root=mountpoint, verbose=args.verbose)
+    LOGGER.debug('Generating fstab.')
+    genfstab(root=mountpoint, verbose=args.verbose)
+
+    if args.mbr:
+        LOGGER.debug('Installing syslinux.')
+        install_update(chroot=mountpoint, verbose=args.verbose)
+
+    LOGGER.debug('Generating initramfs.')
+    mkinitcpio(chroot=mountpoint, verbose=args.verbose)
 
 
 def restore(args: Namespace):
     """Restores the HIDSL image."""
 
     if args.root:
-        restore_image(args.image, args.root, verbose=args.verbose)
+        restore_image(args)
         return
 
     if args.wipefs:
@@ -87,7 +100,7 @@ def restore(args: Namespace):
 
     with TemporaryDirectory() as tmpd:
         with MountContext(partitions, root=tmpd) as mountpoint:
-            restore_image(args.image, mountpoint, verbose=args.verbose)
+            restore_image(args, mountpoint=mountpoint)
 
 
 def main():
