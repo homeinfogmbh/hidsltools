@@ -4,9 +4,9 @@ from argparse import ArgumentParser, Namespace
 from itertools import chain
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
-from subprocess import CalledProcessError
 from sys import exit    # pylint: disable=W0622
 
+from hidsltools.errorhandler import ErrorHandler
 from hidsltools.fstab import FSTAB
 from hidsltools.functions import chroot
 from hidsltools.hostid import HOST_ID, HOSTNAME, MACHINE_ID
@@ -81,12 +81,5 @@ def main():
     args = get_args()
     basicConfig(format=FORMAT, level=DEBUG if args.debug else INFO)
 
-    try:
-        returncode = reset(args)
-    except CalledProcessError as error:
-        LOGGER.critical('Subprocess error.')
-        LOGGER.error(error)
-        LOGGER.debug(error.stderr)
-        exit(error.returncode)
-
-    exit(returncode)
+    with ErrorHandler(LOGGER):
+        exit(reset(args))

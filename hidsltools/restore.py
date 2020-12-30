@@ -3,14 +3,13 @@
 from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
-from subprocess import CalledProcessError
-from sys import exit    # pylint: disable=W0622
 from tempfile import TemporaryDirectory
 
 from hidsltools.beep import beep
 from hidsltools.bsdtar import extract
 from hidsltools.device import Device
 from hidsltools.defaults import DEVICE, IMAGE
+from hidsltools.errorhandler import ErrorHandler
 from hidsltools.fstab import genfstab
 from hidsltools.hostid import mkhostid
 from hidsltools.initcpio import mkinitcpio
@@ -55,21 +54,20 @@ def restore_image(args: Namespace, mountpoint: Path = None):
     if mountpoint is None:
         mountpoint = args.root
 
-    LOGGER.info('Restoring image.')
-    LOGGER.debug('Extracting image archive.')
+    LOGGER.info('Extracting image archive.')
     extract(args.image, mountpoint, verbose=args.verbose)
-    LOGGER.debug('Creating a unique host ID.')
+    LOGGER.info('Creating a unique host ID.')
     mkhostid(root=mountpoint)
-    LOGGER.debug('Generating SSH host keys.')
+    LOGGER.info('Generating SSH host keys.')
     generate_host_keys(root=mountpoint, verbose=args.verbose)
-    LOGGER.debug('Generating fstab.')
+    LOGGER.info('Generating fstab.')
     genfstab(root=mountpoint, verbose=args.verbose)
 
     if args.mbr:
-        LOGGER.debug('Installing syslinux.')
+        LOGGER.info('Installing syslinux.')
         install_update(chroot=mountpoint, verbose=args.verbose)
 
-    LOGGER.debug('Generating initramfs.')
+    LOGGER.info('Generating initramfs.')
     mkinitcpio(chroot=mountpoint, verbose=args.verbose)
 
 
@@ -92,7 +90,7 @@ def restore(args: Namespace):
     LOGGER.info('Creating file systems.')
 
     for partition in partitions:
-        LOGGER.debug('Formatting %s with %s.', partition.device,
+        LOGGER.info('Formatting %s with %s.', partition.device,
                      partition.filesystem)
         mkfs(partition.device, partition.filesystem)
 
@@ -109,13 +107,8 @@ def main():
     args = get_args()
     basicConfig(format=FORMAT, level=DEBUG if args.debug else INFO)
 
-    try:
+    with ErrorHandler(LOGGER):
         restore(args)
 
         if args.beep:
             beep()
-    except CalledProcessError as error:
-        LOGGER.critical('Subprocess error.')
-        LOGGER.error(error)
-        LOGGER.debug(error.stderr)
-        exit(error.returncode)

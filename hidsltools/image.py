@@ -4,12 +4,12 @@ from argparse import ArgumentParser, Namespace
 from getpass import getpass
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
-from subprocess import CalledProcessError
 from sys import exit    # pylint: disable=W0622
 from tempfile import TemporaryDirectory
 from typing import Union
 
 from hidsltools.bsdtar import create
+from hidsltools.errorhandler import ErrorHandler
 from hidsltools.functions import chroot, get_timestamp
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mount import MountContext
@@ -87,12 +87,5 @@ def main():
     args = get_args()
     basicConfig(format=FORMAT, level=DEBUG if args.debug else INFO)
 
-    try:
-        returncode = mkhidslimg(args)
-    except CalledProcessError as error:
-        LOGGER.critical('Subprocess error.')
-        LOGGER.error(error)
-        LOGGER.debug(error.stderr)
-        exit(error.returncode)
-
-    exit(returncode)
+    with ErrorHandler(LOGGER):
+        exit(mkhidslimg(args))
