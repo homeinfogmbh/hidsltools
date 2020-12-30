@@ -20,6 +20,10 @@ class ErrorHandler:
 
     def __exit__(self, _, value, __):
         """Checks for known errors and handles them."""
+        if isinstance(value, KeyboardInterrupt):
+            self.logger.critical('Aborted by user.')
+            exit(3)
+
         if isinstance(value, CalledProcessError):
             self.logger.critical('Subprocess error.')
             self.logger.error(value)
