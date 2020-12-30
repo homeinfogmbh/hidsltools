@@ -91,7 +91,7 @@ def restore(args: Namespace):
 
     for partition in partitions:
         LOGGER.info('Formatting %s with %s.', partition.device,
-                     partition.filesystem)
+                    partition.filesystem)
         mkfs(partition.device, partition.filesystem)
 
     LOGGER.info('Mounting partitions.')
