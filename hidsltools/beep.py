@@ -24,18 +24,14 @@ MELODY = (
 
 
 def get_args(melody: Iterable[Note]) -> Iterator[str]:
-    """Yields corresponsing beep commands."""
+    """Yields corresponsing beep arguments."""
 
-    try:
-        first, *rest = melody
-    except ValueError:
-        raise ValueError('Melody cannot be empty.') from None
-
-    yield from first.commands
+    first, *rest = melody
+    yield from first.args
 
     for note in rest:
         yield '-n'
-        yield from note.commands
+        yield from note.args
 
 
 def beep(melody: Iterable[Note] = MELODY, *, verbose: bool = False):
