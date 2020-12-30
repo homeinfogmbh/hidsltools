@@ -1,7 +1,6 @@
 """Creating images."""
 
 from argparse import ArgumentParser, Namespace
-from datetime import datetime
 from getpass import getpass
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
@@ -11,7 +10,7 @@ from tempfile import TemporaryDirectory
 from typing import Union
 
 from hidsltools.bsdtar import create
-from hidsltools.functions import chroot
+from hidsltools.functions import chroot, get_timestamp
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mount import MountContext
 from hidsltools.types import Filesystem, FSTabEntry
@@ -39,12 +38,6 @@ def get_args() -> Namespace:
     parser.add_argument('-d', '--debug', action='store_true',
                         help='enable verbose logging')
     return parser.parse_args()
-
-
-def get_timestamp() -> str:
-    """Returns the current datetime in ISO format."""
-
-    return datetime.now().isoformat(timespec='seconds')
 
 
 def get_filename(args: Namespace) -> str:
