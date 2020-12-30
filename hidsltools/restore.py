@@ -86,7 +86,7 @@ def restore(args: Namespace):
     LOGGER.info('Mounting partitions.')
 
     with TemporaryDirectory() as tmpd:
-        with MountContext(tmpd, partitions) as mountpoint:
+        with MountContext(partitions, root=tmpd) as mountpoint:
             restore_image(args.image, mountpoint, verbose=args.verbose)
 
 
