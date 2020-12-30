@@ -5,7 +5,7 @@ from typing import Iterable, Union
 
 from hidsltools.functions import chroot, exe
 from hidsltools.logging import LOGGER
-from hidsltools.types import Filesystem, FSTabEntry
+from hidsltools.types import Filesystem, Partition
 
 
 __all__ = ['MountContext']
@@ -41,7 +41,7 @@ def umount(mountpoint_or_device: Path, *, verbose: bool = False):
 class MountContext:
     """Context manager for mounts."""
 
-    def __init__(self, partitions: Iterable[FSTabEntry], *,
+    def __init__(self, partitions: Iterable[Partition], *,
                  root: Union[Path, str] = '/',
                  verbose: bool = False,
                  **options):

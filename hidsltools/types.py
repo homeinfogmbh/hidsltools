@@ -11,9 +11,9 @@ __all__ = [
     'Compression',
     'DeviceType',
     'Filesystem',
-    'FSTabEntry',
     'Glob',
     'Note',
+    'Partition',
     'PasswdEntry'
 ]
 
@@ -58,14 +58,6 @@ class Filesystem(Enum):
         return self.value
 
 
-class FSTabEntry(NamedTuple):
-    """A partition."""
-
-    device: Union[Path, str]
-    mountpoint: Path
-    filesystem: Filesystem
-
-
 class Glob:
     """A re-iterable path glob."""
 
@@ -99,6 +91,15 @@ class Note(NamedTuple):
         if self.length is not None:
             yield '-l'
             yield str(self.length)
+
+
+class Partition(NamedTuple):
+    """Information about a partition."""
+
+    device: Union[Path, str]
+    mountpoint: Path
+    filesystem: Filesystem
+    label: str = None
 
 
 class PasswdEntry(NamedTuple):

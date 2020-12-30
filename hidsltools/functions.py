@@ -71,7 +71,7 @@ def getent(user: str, *, root: Union[Path, str] = None) -> PasswdEntry:
 def returning(typ: type):
     """Returns a decorator to coerce a callable's return value."""
 
-    def decorator(function: Callable):
+    def decorator(function: Callable) -> Callable:
         """Returns a wrapper function to coerce the return value."""
         @wraps(function)
         def wrapper(*args, **kwargs) -> typ:

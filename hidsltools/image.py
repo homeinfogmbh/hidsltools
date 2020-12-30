@@ -13,7 +13,7 @@ from hidsltools.errorhandler import ErrorHandler
 from hidsltools.functions import chroot, get_timestamp
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mount import MountContext
-from hidsltools.types import Filesystem, FSTabEntry
+from hidsltools.types import Filesystem, Partition
 
 
 __all__ = ['main']
@@ -51,7 +51,7 @@ def cifs_mount(mountpoint: Union[Path, str], args: Namespace) -> MountContext:
 
     passwd = getpass('CIFS password: ')
     options = {'user': args.user, 'password': passwd}
-    fstab = FSTabEntry(args.cifs, Path('/'), Filesystem.CIFS)
+    fstab = Partition(args.cifs, Path('/'), Filesystem.CIFS)
     return MountContext([fstab], root=mountpoint, verbose=args.verbose,
                         **options)
 

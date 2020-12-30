@@ -25,6 +25,9 @@ from hidsltools.wipefs import wipefs
 __all__ = ['main']
 
 
+LABELS = ('root', 'EFI')
+
+
 def get_args() -> Namespace:
     """Returns the CLI arguments."""
 
@@ -91,9 +94,10 @@ def restore(args: Namespace):
     LOGGER.info('Creating file systems.')
 
     for partition in partitions:
-        LOGGER.info('Formatting %s with %s.', partition.device,
-                    partition.filesystem)
-        mkfs(partition.device, partition.filesystem)
+        LOGGER.info('Formatting %s with %s as %s.', partition.device,
+                    partition.filesystem, partition.label)
+        mkfs(partition.device, partition.filesystem, label=partition.label,
+             verbose=args.verbose)
 
     LOGGER.info('Mounting partitions.')
 
