@@ -28,7 +28,7 @@ def mkroot(device: Device, *, partno: int = 1, verbose: bool = False):
     exe([SGDISK, '-t', f'{partno}:8304', str(device)], verbose=verbose)
 
 
-@returning(sorted)
+@returning(list)
 def mkparts(device: Device, *, mbr: bool = False,
             verbose: bool = False) -> Iterator[Partition]:
     """Partitions a disk."""

@@ -58,9 +58,14 @@ class MountContext:
     def __exit__(self, *_):
         self.umount()
 
+    def sorted_partitions(self, reverse: bool = False) -> Iterable[Partition]:
+        """Returns the partitions sorted by mount point."""
+        return sorted(self.partitions, key=lambda part: part.mountpoint,
+                      reverse=reverse)
+
     def mount(self):
         """Mounts all partitions to the mountpoint."""
-        for partition in self.partitions:
+        for partition in self.sorted_partitions():
             mountpoint = chroot(self.root, partition.mountpoint)
             mountpoint.mkdir(mode=0o755, parents=True, exist_ok=True)
             LOGGER.debug('Mounting %s to %s.', partition.device, mountpoint)
@@ -69,7 +74,7 @@ class MountContext:
 
     def umount(self):
         """Mounts all partitions to the mountpoint."""
-        for partition in reversed(self.partitions):
+        for partition in self.sorted_partitions(reverse=True):
             mountpoint = chroot(self.root, partition.mountpoint)
             LOGGER.debug('Umounting %s.', mountpoint)
             umount(mountpoint, verbose=self.verbose)
