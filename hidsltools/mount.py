@@ -20,13 +20,12 @@ def mount(device: Union[Path, str], mountpoint: Path, *,
     """Mounts a partition."""
 
     command = [MOUNT]
-    options = [f'{key}={value}' for key, value in options.items()]
 
     if fstype:
         command += ['-t', str(fstype)]
 
     if options:
-        command += ['-o', ','.join(options)]
+        command += ['-o', ','.join(f'{k}={v}' for k, v in options.items())]
 
     command += [str(device), str(mountpoint)]
     exe(command, verbose=verbose)
