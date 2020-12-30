@@ -20,7 +20,7 @@ def generate_host_key(cipher: str, *, root: Union[Path, str] = '/',
                       verbose: bool = False):
     """Generates an SSH host key."""
 
-    path = chroot(root, KEY_TEMPLATE.format(cipher))
+    path = chroot(root, KEY_TEMPLATE.format(cipher=cipher))
     command = [SSH_KEYGEN, '-f', str(path), '-N', '', '-t', cipher]
     exe(command, input=b'y', verbose=verbose)
 
