@@ -79,6 +79,7 @@ def restore(args: Namespace):
         return
 
     if args.wipefs:
+        LOGGER.info('Wiping file systems: %s', args.device)
         wipefs(args.device, verbose=args.verbose)
 
     LOGGER.info('Partitioning disk: %s', args.device)
