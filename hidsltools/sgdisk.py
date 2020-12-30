@@ -25,7 +25,7 @@ def mkroot(device: Device, *, partno: int = 1, verbose: bool = False):
     """Makes a root partition."""
 
     exe([SGDISK, '-n', f'{partno}::', str(device)], verbose=verbose)
-    exe([SGDISK, '-t', f'{partno}:ef00', str(device)], verbose=verbose)
+    exe([SGDISK, '-t', f'{partno}:8304', str(device)], verbose=verbose)
 
 
 @returning(sorted)
