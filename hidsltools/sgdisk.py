@@ -5,7 +5,7 @@ from typing import Iterator
 
 from hidsltools.device import Device
 from hidsltools.functions import exe, returning
-from hidsltools.types import Filesystem, Partition
+from hidsltools.types import Filesystem, FSTabEntry
 
 
 __all__ = ['mkparts']
@@ -30,7 +30,7 @@ def mkroot(device: Device, *, partno: int = 1, verbose: bool = False):
 
 @returning(sorted)
 def mkparts(device: Device, *, mbr: bool = False,
-            verbose: bool = False) -> Iterator[Partition]:
+            verbose: bool = False) -> Iterator[FSTabEntry]:
     """Partitions a disk."""
 
     exe([SGDISK, '-og', str(device)], verbose=verbose)
@@ -39,7 +39,7 @@ def mkparts(device: Device, *, mbr: bool = False,
     if not mbr:
         root_partno = 2
         mkefipart(device, verbose=verbose)
-        yield Partition(Path('/boot'), device.partition(1), Filesystem.VFAT)
+        yield FSTabEntry(device.partition(1), Path('/boot'), Filesystem.VFAT)
 
     mkroot(device, partno=root_partno, verbose=verbose)
-    yield Partition(Path('/'), device.partition(root_partno), Filesystem.EXT4)
+    yield FSTabEntry(device.partition(root_partno), Path('/'), Filesystem.EXT4)

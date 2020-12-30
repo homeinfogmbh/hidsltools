@@ -5,7 +5,7 @@ from typing import Iterable, Union
 
 from hidsltools.functions import chroot, exe
 from hidsltools.logging import LOGGER
-from hidsltools.types import Filesystem, Partition
+from hidsltools.types import Filesystem, FSTabEntry
 
 
 __all__ = ['MountContext']
@@ -41,19 +41,19 @@ def umount(mountpoint_or_device: Path, *, verbose: bool = False):
 class MountContext:
     """Context manager for mounts."""
 
-    def __init__(self, mountpoint: Union[Path, str],
-                 partitions: Iterable[Partition], *,
+    def __init__(self, partitions: Iterable[FSTabEntry], *,
+                 root: Union[Path, str] = '/',
                  verbose: bool = False,
                  **options):
         """Sets the partitions."""
-        self.mountpoint = Path(mountpoint)
         self.partitions = partitions
+        self.root = Path(root)
         self.verbose = verbose
         self.options = options
 
     def __enter__(self):
         self.mount()
-        return self.mountpoint
+        return self.root
 
     def __exit__(self, *_):
         self.umount()
@@ -61,7 +61,7 @@ class MountContext:
     def mount(self):
         """Mounts all partitions to the mountpoint."""
         for partition in self.partitions:
-            mountpoint = chroot(self.mountpoint, partition.mountpoint)
+            mountpoint = chroot(self.root, partition.mountpoint)
             LOGGER.debug('Mounting %s to %s.', partition.device, mountpoint)
             mount(partition.device, mountpoint, fstype=partition.filesystem,
                   verbose=self.verbose, **self.options)
@@ -69,6 +69,6 @@ class MountContext:
     def umount(self):
         """Mounts all partitions to the mountpoint."""
         for partition in reversed(self.partitions):
-            mountpoint = chroot(self.mountpoint, partition.mountpoint)
+            mountpoint = chroot(self.root, partition.mountpoint)
             LOGGER.debug('Umounting %s.', mountpoint)
             umount(mountpoint, verbose=self.verbose)

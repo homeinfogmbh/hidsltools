@@ -10,10 +10,10 @@ from typing import Iterator, NamedTuple, Union
 __all__ = [
     'Compression',
     'DeviceType',
-    'Enum',
+    'Filesystem',
+    'FSTabEntry',
     'Glob',
     'Note',
-    'Partition',
     'PasswdEntry'
 ]
 
@@ -58,6 +58,14 @@ class Filesystem(Enum):
         return self.value
 
 
+class FSTabEntry(NamedTuple):
+    """A partition."""
+
+    device: Union[Path, str]
+    mountpoint: Path
+    filesystem: Filesystem
+
+
 class Glob:
     """A re-iterable path glob."""
 
@@ -91,14 +99,6 @@ class Note(NamedTuple):
         if self.length is not None:
             yield '-l'
             yield str(self.length)
-
-
-class Partition(NamedTuple):
-    """A partition."""
-
-    mountpoint: Path
-    device: Union[Path, str]
-    filesystem: Filesystem
 
 
 class PasswdEntry(NamedTuple):
