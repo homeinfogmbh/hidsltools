@@ -62,6 +62,7 @@ class MountContext:
         """Mounts all partitions to the mountpoint."""
         for partition in self.partitions:
             mountpoint = chroot(self.root, partition.mountpoint)
+            mountpoint.mkdir(mode=0o755, parents=True, exist_ok=True)
             LOGGER.debug('Mounting %s to %s.', partition.device, mountpoint)
             mount(partition.device, mountpoint, fstype=partition.filesystem,
                   verbose=self.verbose, **self.options)
