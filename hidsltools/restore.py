@@ -110,5 +110,5 @@ def main():
     with ErrorHandler(LOGGER):
         restore(args)
 
-        if args.beep:
+        if not args.quiet:
             beep()
