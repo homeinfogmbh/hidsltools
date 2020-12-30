@@ -61,7 +61,7 @@ def make_image(root: Path, file: Path, args: Namespace) -> int:
     """Creates a tarball from a reference system's root directory."""
 
     create(file, *root.glob('*'), compression=args.compression,
-           compression_level= args.compression_level, verbose=args.verbose)
+           compression_level=args.compression_level, verbose=args.verbose)
     return 0
 
 
