@@ -31,7 +31,7 @@ class Compression(Enum):
     GZIP = 'gzip'
 
     @property
-    def bsdtar_arg(self):
+    def bsdtar_arg(self) -> str:
         """Returns the corresponding argument for bsdtar."""
         return f'--{self.value}'
 
@@ -113,7 +113,7 @@ class PasswdEntry(NamedTuple):
     shell: str
 
     @classmethod
-    def from_string(cls, string: str, *, sep: str = ':'):
+    def from_string(cls, string: str, *, sep: str = ':') -> PasswdEntry:
         """Creates the passwd entry from a string."""
         name, passwd, uid, gid, gecos, home, shell = string.split(sep)
         return cls(name, passwd, int(uid), int(gid), gecos, Path(home), shell)
