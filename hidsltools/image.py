@@ -41,10 +41,16 @@ def get_args() -> Namespace:
     return parser.parse_args()
 
 
+def get_timestamp() -> str:
+    """Returns the current datetime in ISO format."""
+
+    return datetime.now().isoformat(timespec='seconds')
+
+
 def get_filename(args: Namespace) -> str:
     """Returns the image file name."""
 
-    return args.file.format(timestamp=datetime.now(), suffix=args.compression)
+    return args.file.format(timestamp=get_timestamp(), suffix=args.compression)
 
 
 def cifs_mount(mountpoint: Union[Path, str], args: Namespace) -> MountContext:
