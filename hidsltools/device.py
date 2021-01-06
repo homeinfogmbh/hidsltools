@@ -23,15 +23,17 @@ class Device:
     def __init__(self, path: Union[Path, str], *,
                  devtype: Optional[DeviceType] = None):
         """Sets the path."""
-        self.path = Path(path)
+        if not (path := Path(path)).is_block_device():
+            raise ValueError('Not a block device:', path)
 
         if devtype is None:
             for devtype in DEVICE_TYPES:    # pylint: disable=R1704
-                if devtype.check(self.path):
+                if devtype.check(path):
                     break
             else:
-                raise ValueError('Unknown block device type:', self.path)
+                raise ValueError('Unknown block device type:', path)
 
+        self.path = path
         self.devtype = devtype
 
     def __getattr__(self, attr: str):
