@@ -1,8 +1,8 @@
 """File system table related functions."""
 
 from pathlib import Path
-from typing import Union
 
+from hidsltools.defaults import ROOT
 from hidsltools.functions import chroot, exe
 
 
@@ -13,7 +13,7 @@ FSTAB = Path('/etc/fstab')
 GENFSTAB = '/usr/bin/genfstab'
 
 
-def genfstab(*, root: Union[Path, str] = '/', verbose: bool = False):
+def genfstab(*, root: Path = ROOT, verbose: bool = False) -> None:
     """Generates a file system table."""
 
     command = [GENFSTAB, '-L', '-p', str(root)]

@@ -1,7 +1,7 @@
 """Syslinux invocation."""
 
 from pathlib import Path
-from typing import Union
+from typing import Optional
 
 from hidsltools.functions import exe
 
@@ -13,7 +13,8 @@ AUTOUPDATE = Path('/boot/syslinux/SYSLINUX_AUTOUPDATE')
 SYSLINUX_INSTALL_UPDATE = '/usr/bin/syslinux-install_update'
 
 
-def install_update(*, chroot: Union[Path, str] = None, verbose: bool = False):
+def install_update(*, chroot: Optional[Path] = None,
+                   verbose: bool = False) -> None:
     """Installs or updates syslinux."""
 
     command = [SYSLINUX_INSTALL_UPDATE, '-i', '-a', '-m']

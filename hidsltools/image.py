@@ -6,9 +6,9 @@ from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
 from sys import exit    # pylint: disable=W0622
 from tempfile import TemporaryDirectory
-from typing import Union
 
 from hidsltools.bsdtar import create
+from hidsltools.defaults import ROOT
 from hidsltools.errorhandler import ErrorHandler
 from hidsltools.functions import chroot, get_timestamp
 from hidsltools.logging import FORMAT, LOGGER
@@ -46,12 +46,12 @@ def get_filename(args: Namespace) -> str:
     return args.file.format(timestamp=get_timestamp(), suffix=args.compression)
 
 
-def cifs_mount(mountpoint: Union[Path, str], args: Namespace) -> MountContext:
+def cifs_mount(mountpoint: Path, args: Namespace) -> MountContext:
     """Returns a mount context."""
 
     passwd = getpass('CIFS password: ')
     options = {'user': args.user, 'password': passwd}
-    fstab = Partition(args.cifs, Path('/'), Filesystem.CIFS)
+    fstab = Partition(args.cifs, ROOT, Filesystem.CIFS)
     return MountContext([fstab], root=mountpoint, verbose=args.verbose,
                         **options)
 
@@ -81,7 +81,7 @@ def mkhidslimg(args: Namespace) -> int:
     return make_image(args.root, file, args)
 
 
-def main():
+def main() -> None:
     """Runs the program."""
 
     args = get_args()

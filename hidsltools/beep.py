@@ -34,7 +34,7 @@ def get_args(melody: Iterable[Note]) -> Iterator[str]:
         yield from note.args
 
 
-def beep(melody: Iterable[Note] = MELODY, *, verbose: bool = False):
+def beep(melody: Iterable[Note] = MELODY, *, verbose: bool = False) -> None:
     """Beeps the given melody."""
 
     exe([BEEP, *get_args(melody)], verbose=verbose)

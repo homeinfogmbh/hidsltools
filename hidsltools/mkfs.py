@@ -1,6 +1,7 @@
 """File system creation."""
 
 from pathlib import Path
+from typing import Optional
 
 from hidsltools.functions import exe
 from hidsltools.types import Filesystem
@@ -12,8 +13,8 @@ __all__ = ['mkfs']
 MKFS = '/usr/bin/mkfs'
 
 
-def mkvfat(device: Path, *, label: str = None, fat_size: int = 32,
-           verbose: bool = False):
+def mkvfat(device: Path, *, label: Optional[str] = None, fat_size: int = 32,
+           verbose: bool = False) -> None:
     """Creates a vfat file system."""
 
     command = [MKFS, '-t', 'vfat']
@@ -28,7 +29,8 @@ def mkvfat(device: Path, *, label: str = None, fat_size: int = 32,
     exe(command, verbose=verbose)
 
 
-def mkext4(device: Path, *, label: str = None, verbose: bool = False):
+def mkext4(device: Path, *, label: Optional[str] = None,
+           verbose: bool = False) -> None:
     """Creates an ext4 file system."""
 
     command = [MKFS, '-t', 'ext4', '-F']
@@ -40,14 +42,14 @@ def mkext4(device: Path, *, label: str = None, verbose: bool = False):
     exe(command, verbose=verbose)
 
 
-def mkfs(device: Path, filesystem: Filesystem, *, label: str = None,
-         verbose: bool = False):
+def mkfs(device: Path, filesystem: Filesystem, *,
+         verbose: bool = False, **kwargs) -> None:
     """Creates the given file system."""
 
     if filesystem == Filesystem.VFAT:
-        return mkvfat(device, label=label, verbose=verbose)
+        return mkvfat(device, verbose=verbose, **kwargs)
 
     if filesystem == Filesystem.EXT4:
-        return mkext4(device, label=label, verbose=verbose)
+        return mkext4(device, verbose=verbose, **kwargs)
 
     raise NotImplementedError('File system not implemented:', filesystem)

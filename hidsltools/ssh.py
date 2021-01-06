@@ -1,8 +1,8 @@
 """SSH related functions."""
 
 from pathlib import Path
-from typing import Union
 
+from hidsltools.defaults import ROOT
 from hidsltools.functions import chroot, exe
 from hidsltools.types import Glob
 
@@ -16,8 +16,8 @@ KEY_TEMPLATE = '/etc/ssh/ssh_host_{cipher}_key'
 SSH_KEYGEN = '/usr/bin/ssh-keygen'
 
 
-def generate_host_key(cipher: str, *, root: Union[Path, str] = '/',
-                      verbose: bool = False):
+def generate_host_key(cipher: str, *, root: Path = ROOT,
+                      verbose: bool = False) -> None:
     """Generates an SSH host key."""
 
     path = chroot(root, KEY_TEMPLATE.format(cipher=cipher))
@@ -25,7 +25,7 @@ def generate_host_key(cipher: str, *, root: Union[Path, str] = '/',
     exe(command, input=b'y', verbose=verbose)
 
 
-def generate_host_keys(*, root: Union[Path, str] = '/', verbose: bool = False):
+def generate_host_keys(*, root: Path = ROOT, verbose: bool = False) -> None:
     """Generates the SSH host keys."""
 
     for cipher in CIPHERS:

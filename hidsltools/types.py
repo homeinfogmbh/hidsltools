@@ -3,8 +3,8 @@
 from __future__ import annotations
 from enum import Enum
 from pathlib import Path
-from re import Pattern
-from typing import Iterator, NamedTuple, Union
+from re import fullmatch
+from typing import Iterator, NamedTuple
 
 
 __all__ = [
@@ -39,12 +39,12 @@ class Compression(Enum):
 class DeviceType(NamedTuple):
     """Block device types."""
 
-    regex: Pattern
+    regex: str
     infix: str = ''
 
     def check(self, path: Path) -> bool:
         """Checks is the given path is a device of this type."""
-        return self.regex.fullmatch(path.stem) and path.is_block_device()
+        return fullmatch(self.regex, path.stem) and path.is_block_device()
 
 
 class Filesystem(Enum):
@@ -60,6 +60,8 @@ class Filesystem(Enum):
 
 class Glob:
     """A re-iterable path glob."""
+
+    __slots__ = ('path', 'glob')
 
     def __init__(self, path: Path, glob: str):
         """Sets path and glob expression."""
@@ -96,7 +98,7 @@ class Note(NamedTuple):
 class Partition(NamedTuple):
     """Information about a partition."""
 
-    device: Union[Path, str]
+    device: Path
     mountpoint: Path
     filesystem: Filesystem
     label: str = None

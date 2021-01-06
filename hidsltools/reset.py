@@ -75,7 +75,7 @@ def reset(args: Namespace) -> int:
     return 0
 
 
-def main():
+def main() -> None:
     """Runs the script."""
 
     args = get_args()

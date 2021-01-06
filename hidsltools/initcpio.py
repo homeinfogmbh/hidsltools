@@ -1,7 +1,7 @@
 """Initramfs tools."""
 
 from pathlib import Path
-from typing import Union
+from typing import Optional
 
 from hidsltools.functions import arch_chroot, exe
 from hidsltools.types import Glob
@@ -14,7 +14,8 @@ INITRAMFS = Glob('/boot', 'initramfs-linux*.img')
 MKINITCPIO = '/usr/bin/mkinitcpio'
 
 
-def mkinitcpio(*, chroot: Union[Path, str] = None, verbose: bool = False):
+def mkinitcpio(*, chroot: Optional[Path] = None,
+               verbose: bool = False) -> None:
     """Re-generates the initramfs."""
 
     command = [MKINITCPIO, '-P']

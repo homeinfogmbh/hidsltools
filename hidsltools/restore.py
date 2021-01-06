@@ -4,6 +4,7 @@ from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Optional
 
 from hidsltools.beep import beep
 from hidsltools.bsdtar import extract
@@ -51,7 +52,7 @@ def get_args() -> Namespace:
     return parser.parse_args()
 
 
-def restore_image(args: Namespace, mountpoint: Path = None):
+def restore_image(args: Namespace, mountpoint: Optional[Path] = None) -> None:
     """Restores an image."""
 
     if mountpoint is None:
@@ -74,7 +75,7 @@ def restore_image(args: Namespace, mountpoint: Path = None):
     mkinitcpio(chroot=mountpoint, verbose=args.verbose)
 
 
-def restore(args: Namespace):
+def restore(args: Namespace) -> None:
     """Restores the HIDSL image."""
 
     if args.root:
@@ -86,9 +87,10 @@ def restore(args: Namespace):
         wipefs(args.device, verbose=args.verbose)
 
     LOGGER.info('Partitioning disk: %s', args.device)
-    partitions = mkparts(args.device, mbr=args.mbr, verbose=args.verbose)
+    partitions = []
 
-    for partition in partitions:
+    for partition in mkparts(args.device, mbr=args.mbr, verbose=args.verbose):
+        partitions.append(partition)
         LOGGER.debug('Created partition: %s', partition)
 
     LOGGER.info('Creating file systems.')
@@ -106,7 +108,7 @@ def restore(args: Namespace):
             restore_image(args, mountpoint=mountpoint)
 
 
-def main():
+def main() -> None:
     """Runs the script."""
 
     args = get_args()

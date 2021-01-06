@@ -10,7 +10,7 @@ __all__ = ['wipefs']
 WIPEFS = '/usr/bin/wipefs'
 
 
-def wipefs(device: Device, *, verbose: bool = False):
+def wipefs(device: Device, *, verbose: bool = False) -> None:
     """Wipes file systems from a device."""
 
     command = [WIPEFS, '-a', '-f', str(device)]

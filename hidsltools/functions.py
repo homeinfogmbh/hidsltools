@@ -1,11 +1,11 @@
 """Common functions."""
 
 from datetime import datetime
-from functools import wraps
 from pathlib import Path
 from subprocess import DEVNULL, CompletedProcess, check_output, run
-from typing import Callable, IO, Iterable, Union
+from typing import IO, Iterable, List, Optional
 
+from hidsltools.defaults import ROOT
 from hidsltools.logging import LOGGER
 from hidsltools.types import PasswdEntry
 
@@ -16,7 +16,6 @@ __all__ = [
     'exe',
     'get_timestamp',
     'getent',
-    'returning',
     'rmsubtree'
 ]
 
@@ -25,23 +24,23 @@ ARCH_CHROOT = '/usr/bin/arch-chroot'
 GETENT = '/usr/bin/getent'
 
 
-def arch_chroot(root: Union[Path, str], command: Iterable[str]):
+def arch_chroot(root: Path, command: Iterable[str]) -> List[str]:
     """Converts a command into a chrooted command."""
 
     return [ARCH_CHROOT, str(root), *command]
 
 
-def chroot(root: Union[Path, str], path: Union[Path, str]):
+def chroot(root: Path, path: Path) -> Path:
     """Changes tht root of the path."""
 
-    if (path := Path(path)).is_absolute():
-        path = path.relative_to('/')
+    if path.is_absolute():
+        path = path.relative_to(ROOT)
 
-    return Path(root).joinpath(path)
+    return root.joinpath(path)
 
 
-def exe(command, *, input: bytes = None,    # pylint: disable=W0622
-        stdout: IO = None, verbose: bool = False) -> CompletedProcess:
+def exe(command, *, input: Optional[bytes] = None, stdout: Optional[IO] = None,
+        verbose: bool = False) -> CompletedProcess:
     """Returns stdout and stderr parameters for subprocess.run()."""
 
     stderr = None if verbose else DEVNULL
@@ -56,7 +55,7 @@ def get_timestamp(timespec: str = 'seconds') -> str:
     return datetime.now().isoformat(timespec=timespec)
 
 
-def getent(user: str, *, root: Union[Path, str] = None) -> PasswdEntry:
+def getent(user: str, *, root: Optional[Path] = None) -> PasswdEntry:
     """Returns the home of the user."""
 
     command = [GETENT, 'passwd', user]
@@ -68,24 +67,7 @@ def getent(user: str, *, root: Union[Path, str] = None) -> PasswdEntry:
     return PasswdEntry.from_string(text.strip())
 
 
-def returning(typ: type):
-    """Returns a decorator to coerce a callable's return value."""
-
-    def decorator(function: Callable) -> Callable:
-        """Returns a wrapper function to coerce the return value."""
-        @wraps(function)
-        def wrapper(*args, **kwargs) -> typ:
-            """Retuns the result from the function
-            casted to the given type.
-            """
-            return typ(function(*args, **kwargs))
-
-        return wrapper
-
-    return decorator
-
-
-def rmsubtree(directory: Path):
+def rmsubtree(directory: Path) -> None:
     """Removes all files and folders below the given directory."""
 
     for inode in directory.iterdir():

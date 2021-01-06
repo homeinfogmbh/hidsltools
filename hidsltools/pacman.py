@@ -1,7 +1,7 @@
 """Pacman related operations."""
 
 from pathlib import Path
-from typing import Union
+from typing import Optional
 
 from hidsltools.functions import exe
 
@@ -13,7 +13,7 @@ LOCKFILE = Path('/var/lib/pacman/db.lck')
 PACMAN = '/usr/bin/pacman'
 
 
-def clean(*, chroot: Union[Path, str] = None, verbose: bool = False):
+def clean(*, chroot: Optional[Path] = None, verbose: bool = False) -> None:
     """Cleans the pacman cache."""
 
     command = [PACMAN, '-S', '-c', '-c', '--noconfirm']

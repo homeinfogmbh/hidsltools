@@ -2,9 +2,9 @@
 
 from os import linesep
 from pathlib import Path
-from typing import Union
 from uuid import uuid4
 
+from hidsltools.defaults import ROOT
 from hidsltools.functions import chroot
 
 
@@ -16,7 +16,7 @@ HOSTNAME = Path('/etc/hostname')
 MACHINE_ID = Path('/etc/machine-id')
 
 
-def mkhostid(*, root: Union[Path, str] = '/'):
+def mkhostid(*, root: Path = ROOT) -> None:
     """Generates the host id on the system."""
 
     with chroot(root, HOST_ID).open('w') as file:
