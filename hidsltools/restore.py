@@ -26,9 +26,6 @@ from hidsltools.wipefs import wipefs
 __all__ = ['main']
 
 
-LABELS = ('root', 'EFI')
-
-
 def get_args() -> Namespace:
     """Returns the CLI arguments."""
 
