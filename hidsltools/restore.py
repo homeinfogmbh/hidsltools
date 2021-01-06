@@ -79,6 +79,9 @@ def restore(args: Namespace) -> None:
         restore_image(args)
         return
 
+    if not args.device.is_block_device():
+        LOGGER.critical('%s is not a block device.', args.device)
+
     if args.wipefs:
         LOGGER.info('Wiping file systems: %s', args.device)
         wipefs(args.device, verbose=args.verbose)
