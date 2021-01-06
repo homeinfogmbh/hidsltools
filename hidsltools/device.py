@@ -1,7 +1,7 @@
 """Common stuff."""
 
 from pathlib import Path
-from typing import Iterator, Optional, Union
+from typing import Iterator
 
 from hidsltools.types import DeviceType
 
@@ -15,34 +15,17 @@ SDX = DeviceType('sd([a-z])')
 DEVICE_TYPES = {EMMC, NVME, SDX}
 
 
-class Device:
+class Device(type(Path())):
     """A block device."""
 
-    __slots__ = ('path', 'devtype')
+    @property
+    def devtype(self):
+        """Returns the device type."""
+        for devtype in DEVICE_TYPES:
+            if devtype.check(self):
+                return devtype
 
-    def __init__(self, path: Union[Path, str], *,
-                 devtype: Optional[DeviceType] = None):
-        """Sets the path."""
-        if not (path := Path(path)).is_block_device():
-            raise ValueError('Not a block device:', path)
-
-        if devtype is None:
-            for devtype in DEVICE_TYPES:    # pylint: disable=R1704
-                if devtype.check(path):
-                    break
-            else:
-                raise ValueError('Unknown block device type:', path)
-
-        self.path = path
-        self.devtype = devtype
-
-    def __getattr__(self, attr: str):
-        """Delegates to the path."""
-        return getattr(self.path, attr)
-
-    def __str__(self):
-        """Delegates to the path."""
-        return str(self.path)
+        raise ValueError('Unknown block device type:', self)
 
     @property
     def partitions(self) -> Iterator[Path]:
