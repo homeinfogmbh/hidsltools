@@ -73,5 +73,6 @@ def rmsubtree(directory: Path) -> None:
     for inode in directory.iterdir():
         if inode.is_dir():
             rmsubtree(inode)
-
-        inode.unlink()
+            inode.rmdir()
+        else:
+            inode.unlink(missing_ok=True)
