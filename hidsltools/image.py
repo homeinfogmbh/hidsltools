@@ -1,6 +1,7 @@
 """Creating images."""
 
 from argparse import ArgumentParser, Namespace
+from datetime import date
 from getpass import getpass
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
@@ -10,7 +11,7 @@ from tempfile import TemporaryDirectory
 from hidsltools.bsdtar import create
 from hidsltools.defaults import ROOT
 from hidsltools.errorhandler import ErrorHandler
-from hidsltools.functions import chroot, get_timestamp
+from hidsltools.functions import chroot
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mount import MountContext
 from hidsltools.types import Compression, Filesystem, Partition
@@ -48,7 +49,7 @@ def get_args() -> Namespace:
 def get_filename(args: Namespace) -> str:
     """Returns the image file name."""
 
-    return args.file.format(get_timestamp(), args.compression.value)
+    return args.file.format(date.today().isoformat(), args.compression.value)
 
 
 def cifs_mount(mountpoint: Path, args: Namespace) -> MountContext:

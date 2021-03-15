@@ -1,6 +1,5 @@
 """Common functions."""
 
-from datetime import datetime
 from pathlib import Path
 from subprocess import DEVNULL, CompletedProcess, check_output, run
 from typing import IO, Iterable, List, Optional
@@ -14,7 +13,6 @@ __all__ = [
     'arch_chroot',
     'chroot',
     'exe',
-    'get_timestamp',
     'getent',
     'rmsubtree'
 ]
@@ -47,12 +45,6 @@ def exe(command, *, input: Optional[bytes] = None, stdout: Optional[IO] = None,
     stdout = stdout if stdout is not None else None if verbose else DEVNULL
     LOGGER.debug('Running command: %s', command)
     return run(command, input=input, check=True, stderr=stderr, stdout=stdout)
-
-
-def get_timestamp(timespec: str = 'seconds') -> str:
-    """Returns the current datetime in ISO format."""
-
-    return datetime.now().isoformat(timespec=timespec)
 
 
 def getent(user: str, *, root: Optional[Path] = None) -> PasswdEntry:
