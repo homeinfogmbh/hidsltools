@@ -13,6 +13,7 @@ from hidsltools.hostid import HOST_ID, HOSTNAME, MACHINE_ID
 from hidsltools.initcpio import INITRAMFS
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.openvpn import delete_client_config
+from hidsltools.pacman import clean
 from hidsltools.ssh import HOST_KEYS
 from hidsltools.syslinux import AUTOUPDATE
 from hidsltools.systemd import vacuum, disable, enable
@@ -70,7 +71,9 @@ def reset(args: Namespace) -> int:
 
     LOGGER.info('Clearing journal.')
     vacuum(root=args.root, verbose=args.verbose)
-    LOGGER.info('removing dotfiles.')
+    LOGGER.info('Cleaning up packet cache.')
+    clean(root=args.root)
+    LOGGER.info('Removing dotfiles.')
     rmdotfiles(root=args.root)
     return 0
 

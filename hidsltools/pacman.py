@@ -13,12 +13,12 @@ LOCKFILE = Path('/var/lib/pacman/db.lck')
 PACMAN = '/usr/bin/pacman'
 
 
-def clean(*, chroot: Optional[Path] = None, verbose: bool = False) -> None:
+def clean(*, root: Optional[Path] = None, verbose: bool = False) -> None:
     """Cleans the pacman cache."""
 
     command = [PACMAN, '-S', '-c', '-c', '--noconfirm']
 
-    if chroot is not None:
-        command += ['--sysroot', str(chroot)]
+    if root is not None:
+        command += ['--sysroot', str(root)]
 
     exe(command, verbose=verbose)
