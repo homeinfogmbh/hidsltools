@@ -66,7 +66,7 @@ def reset(args: Namespace) -> int:
 
     for path in chain(REMOVE_FILES, *remove_globs):
         LOGGER.info('Removing: %s', path)
-        chroot(args.root, path).unlink()
+        chroot(args.root, path).unlink(missing_ok=True)
 
     LOGGER.info('Clearing journal.')
     vacuum(root=args.root, verbose=args.verbose)
