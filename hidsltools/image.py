@@ -19,7 +19,7 @@ from hidsltools.types import Compression, Filesystem, Partition
 __all__ = ['main']
 
 
-FILENAME_TEMPLATE = 'hidsl-{timestamp}.bsdtar.{suffix}'
+FILENAME_TEMPLATE = 'hidsl-{}.bsdtar.{}'
 USER_NAME = 'images'
 
 
@@ -48,7 +48,7 @@ def get_args() -> Namespace:
 def get_filename(args: Namespace) -> str:
     """Returns the image file name."""
 
-    return args.file.format(timestamp=get_timestamp(), suffix=args.compression)
+    return args.file.format(get_timestamp(), args.compression.value)
 
 
 def cifs_mount(mountpoint: Path, args: Namespace) -> MountContext:
