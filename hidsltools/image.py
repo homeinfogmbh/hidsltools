@@ -13,7 +13,7 @@ from hidsltools.errorhandler import ErrorHandler
 from hidsltools.functions import chroot, get_timestamp
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mount import MountContext
-from hidsltools.types import Filesystem, Partition
+from hidsltools.types import Compression, Filesystem, Partition
 
 
 __all__ = ['main']
@@ -33,6 +33,11 @@ def get_args() -> Namespace:
     parser.add_argument('-c', '--cifs', metavar='share', help='CIFS share')
     parser.add_argument('-u', '--user', default=USER_NAME, metavar='name',
                         help='CIFS user name')
+    parser.add_argument('-x', '--compression', type=Compression,
+                        metavar='compression', default=Compression.LZOP,
+                        help='compression algorithm')
+    parser.add_argument('-l', '--compression-level', type=int, metavar='level',
+                        default=9, help='compression algorithm')
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='show output of subprocesses')
     parser.add_argument('-d', '--debug', action='store_true',
