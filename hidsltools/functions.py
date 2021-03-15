@@ -63,7 +63,7 @@ def getent(user: str, *, root: Optional[Path] = None) -> PasswdEntry:
     if root is not None:
         command = arch_chroot(root, command)
 
-    text = check_output(command)
+    text = check_output(command, text=True)
     return PasswdEntry.from_string(text.strip())
 
 
