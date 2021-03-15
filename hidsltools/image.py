@@ -38,7 +38,7 @@ def get_args() -> Namespace:
                         metavar='compression', default=Compression.LZOP,
                         help='compression algorithm')
     parser.add_argument('-l', '--compression-level', type=int, metavar='level',
-                        default=9, help='compression algorithm')
+                        default=9, help='compression level')
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='show output of subprocesses')
     parser.add_argument('-d', '--debug', action='store_true',
