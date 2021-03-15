@@ -10,7 +10,7 @@ from hidsltools.logging import LOGGER
 __all__ = ['rmdotfiles']
 
 
-DATA = Path('/usr/share/digsig')
+DATA = Path('/var/lib/digsig')
 USERS = {'digsig', 'hidslcfg', 'homeinfo', 'root'}
 
 
