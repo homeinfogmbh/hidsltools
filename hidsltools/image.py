@@ -71,7 +71,7 @@ def mkhidslimg(args: Namespace) -> int:
         LOGGER.error('Specified root is not a mount point.')
         return 1
 
-    file = Path(get_filename(args.file))
+    file = Path(get_filename(args))
 
     if args.cifs:
         with TemporaryDirectory() as tmp:
