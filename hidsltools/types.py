@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 from enum import Enum
-from os import chdir
 from pathlib import Path
 from re import fullmatch
 from typing import Iterator, NamedTuple, Union
@@ -15,8 +14,7 @@ __all__ = [
     'Glob',
     'Note',
     'Partition',
-    'PasswdEntry',
-    'WorkingDirectory'
+    'PasswdEntry'
 ]
 
 
@@ -122,24 +120,3 @@ class PasswdEntry(NamedTuple):
         """Creates the passwd entry from a string."""
         name, passwd, uid, gid, gecos, home, shell = string.split(sep)
         return cls(name, passwd, int(uid), int(gid), gecos, Path(home), shell)
-
-
-class WorkingDirectory:
-    """A working directory."""
-
-    __slots__ = ('directory', 'origin')
-
-    def __init__(self, directory: Union[Path, str]):
-        """Sets the target directory."""
-        self.directory = Path(directory)
-        self.origin = None
-
-    def __enter__(self):
-        """Changes to the target directory."""
-        self.origin = Path.cwd()
-        chdir(self.directory)
-        return self.directory
-
-    def __exit__(self, *_):
-        """Change back to original directory."""
-        chdir(self.origin)

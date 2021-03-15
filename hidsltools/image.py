@@ -14,10 +14,7 @@ from hidsltools.errorhandler import ErrorHandler
 from hidsltools.functions import chroot
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mount import MountContext
-from hidsltools.types import Compression
-from hidsltools.types import Filesystem
-from hidsltools.types import Partition
-from hidsltools.types import WorkingDirectory
+from hidsltools.types import Compression, Filesystem, Partition
 
 
 __all__ = ['main']
@@ -65,14 +62,11 @@ def cifs_mount(mountpoint: Path, args: Namespace) -> MountContext:
                         **options)
 
 
-def make_image(root: Path, file: Path, args: Namespace) -> int:
+def make_image(file: Path, args: Namespace) -> int:
     """Creates a tarball from a reference system's root directory."""
 
-    with WorkingDirectory(args.root):
-        files = [file.relative_to(root) for file in root.glob('*')]
-        create(file, *files, compression=args.compression,
-               compression_level=args.compression_level, verbose=args.verbose)
-
+    create(file, args.root, compression=args.compression,
+           compression_level=args.compression_level, verbose=args.verbose)
     return 0
 
 
@@ -88,9 +82,9 @@ def mkhidslimg(args: Namespace) -> int:
     if args.cifs:
         with TemporaryDirectory() as tmp:
             with cifs_mount(tmp, args) as mount:
-                return make_image(args.root, chroot(mount, file), args)
+                return make_image(chroot(mount, file), args)
 
-    return make_image(args.root, file, args)
+    return make_image(file, args)
 
 
 def main() -> None:
