@@ -4,7 +4,7 @@ from __future__ import annotations
 from enum import Enum
 from pathlib import Path
 from re import fullmatch
-from typing import Iterator, NamedTuple
+from typing import Iterator, NamedTuple, Union
 
 
 __all__ = [
@@ -63,9 +63,9 @@ class Glob:
 
     __slots__ = ('path', 'glob')
 
-    def __init__(self, path: Path, glob: str):
+    def __init__(self, path: Union[Path, str], glob: str):
         """Sets path and glob expression."""
-        self.path = path
+        self.path = Path(path)
         self.glob = glob
 
     def __iter__(self):
