@@ -13,13 +13,16 @@ __all__ = ['bsdtar', 'create', 'extract']
 BSDTAR = '/usr/bin/bsdtar'
 
 
-def bsdtar(tarball: Path, *files: Path,
+def bsdtar(tarball: Path, *files: Path, chdir: Optional[Path] = None,
            compression: Compression = Compression.LZOP,
            compression_level: int = 9, verbose: bool = False) -> None:
     """Creates a tarball from the given files."""
 
     command = [BSDTAR, '-c', '-p', '-f', str(tarball)]
     options = []
+
+    if chdir:
+        command += ['-C', str(chdir)]
 
     if verbose:
         command.append('-v')
@@ -42,7 +45,7 @@ def create(tarball: Path, root: Path, *,
     """Creates a tarball from a root file system mount point."""
 
     files = [inode.relative_to(root) for inode in root.iterdir()]
-    return bsdtar(tarball, *files, compression=compression,
+    return bsdtar(tarball, *files, chdir=root, compression=compression,
                   compression_level=compression_level, verbose=verbose)
 
 
