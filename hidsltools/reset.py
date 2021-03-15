@@ -1,10 +1,10 @@
 """Resets a HIDSL installation."""
 
 from argparse import ArgumentParser, Namespace
-from itertools import chain
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
 from sys import exit    # pylint: disable=W0622
+from typing import Iterator
 
 from hidsltools.errorhandler import ErrorHandler
 from hidsltools.fstab import FSTAB
@@ -47,6 +47,17 @@ def get_args() -> Namespace:
     return parser.parse_args()
 
 
+def get_files_to_be_removed(root: Path) -> Iterator[Path]:
+    """Yields files to be removed."""
+
+    for file in REMOVE_FILES:
+        yield chroot(root, file)
+
+    for glob in REMOVE_GLOBS:
+        for file in Glob(chroot(root, glob.path), glob.glob):
+            yield file
+
+
 def reset(args: Namespace) -> int:
     """Performs the reset."""
 
@@ -60,14 +71,10 @@ def reset(args: Namespace) -> int:
     enable(WARNING, root=args.root, verbose=args.verbose)
     LOGGER.info('Removing OpenVPN client configuration.')
     delete_client_config(root=args.root)
-    remove_globs = [
-        Glob(chroot(args.root, glob.path), glob.glob)
-        for glob in REMOVE_GLOBS
-    ]
 
-    for path in chain(REMOVE_FILES, *remove_globs):
-        LOGGER.info('Removing: %s', path)
-        chroot(args.root, path).unlink(missing_ok=True)
+    for file in get_files_to_be_removed(args.root):
+        LOGGER.info('Removing: %s', file)
+        chroot(args.root, file).unlink(missing_ok=True)
 
     LOGGER.info('Clearing journal.')
     vacuum(root=args.root, verbose=args.verbose)
