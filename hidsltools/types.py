@@ -56,7 +56,7 @@ class Filesystem(Enum):
         return self.value
 
 
-class Glob:
+class Glob:     # pylint: disable=R0903
     """A re-iterable path glob."""
 
     __slots__ = ('path', 'glob')
