@@ -30,10 +30,8 @@ class Compression(Enum):
     LZOP = 'lzop'
     GZIP = 'gzip'
 
-    @property
-    def bsdtar_arg(self) -> str:
-        """Returns the corresponding argument for bsdtar."""
-        return f'--{self.value}'
+    def __str__(self):  # pylint: disable=E0307
+        return self.value
 
 
 class DeviceType(NamedTuple):

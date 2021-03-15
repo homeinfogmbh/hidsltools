@@ -49,7 +49,7 @@ def get_args() -> Namespace:
 def get_filename(args: Namespace) -> str:
     """Returns the image file name."""
 
-    return args.file.format(date.today().isoformat(), args.compression.value)
+    return args.file.format(date.today().isoformat(), args.compression)
 
 
 def cifs_mount(mountpoint: Path, args: Namespace) -> MountContext:
