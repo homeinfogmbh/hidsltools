@@ -71,7 +71,7 @@ def reset(args: Namespace) -> int:
 
     LOGGER.info('Clearing journal.')
     vacuum(root=args.root, verbose=args.verbose)
-    LOGGER.info('Cleaning up packet cache.')
+    LOGGER.info('Cleaning up package cache.')
     clean(root=args.root)
     LOGGER.info('Removing dotfiles.')
     rmdotfiles(root=args.root)
