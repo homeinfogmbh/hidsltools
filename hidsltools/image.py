@@ -14,7 +14,10 @@ from hidsltools.errorhandler import ErrorHandler
 from hidsltools.functions import chroot
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mount import MountContext
-from hidsltools.types import Compression, Filesystem, Partition
+from hidsltools.types import Compression
+from hidsltools.types import Filesystem
+from hidsltools.types import Partition
+from hidsltools.types import WorkingDirectory
 
 
 __all__ = ['main']
@@ -65,8 +68,11 @@ def cifs_mount(mountpoint: Path, args: Namespace) -> MountContext:
 def make_image(root: Path, file: Path, args: Namespace) -> int:
     """Creates a tarball from a reference system's root directory."""
 
-    create(file, *root.glob('*'), compression=args.compression,
-           compression_level=args.compression_level, verbose=args.verbose)
+    with WorkingDirectory(args.root):
+        files = [file.relative_to(root) for file in root.glob('*')]
+        create(file, *files, compression=args.compression,
+               compression_level=args.compression_level, verbose=args.verbose)
+
     return 0
 
 
