@@ -7,13 +7,13 @@ from hidsltools.functions import exe
 from hidsltools.types import Compression
 
 
-__all__ = ['create', 'extract']
+__all__ = ['bsdtar', 'create', 'extract']
 
 
 BSDTAR = '/usr/bin/bsdtar'
 
 
-def create(tarball: Path, *files: Path,
+def bsdtar(tarball: Path, *files: Path,
            compression: Compression = Compression.LZOP,
            compression_level: int = 9, verbose: bool = False) -> None:
     """Creates a tarball from the given files."""
@@ -34,6 +34,16 @@ def create(tarball: Path, *files: Path,
         command += ['--options', ','.join(options)]
 
     exe([*command, *files], verbose=verbose)
+
+
+def create(tarball: Path, root: Path, *,
+           compression: Compression = Compression.LZOP,
+           compression_level: int = 9, verbose: bool = False) -> None:
+    """Creates a tarball from a root file system mount point."""
+
+    files = [inode.relative_to(root) for inode in root.iterdir()]
+    return bsdtar(tarball, *files, compression=compression,
+                  compression_level=compression_level, verbose=verbose)
 
 
 def extract(tarball: Path, target: Optional[Path] = None, *,
