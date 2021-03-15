@@ -20,6 +20,6 @@ def rmdotfiles(*, root: Path = ROOT) -> None:
     rmsubtree(chroot(root, DATA))
 
     for user in sorted(USERS):
-        home = getent(user).home
+        home = getent(user, root=root).home
         LOGGER.debug('Cleaning home %s of user %s.', home, user)
         rmsubtree(chroot(root, home))
