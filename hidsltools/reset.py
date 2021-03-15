@@ -61,7 +61,7 @@ def reset(args: Namespace) -> int:
     LOGGER.info('Removing OpenVPN client configuration.')
     delete_client_config(root=args.root)
     remove_globs = [
-        Glob(chroot(args.chroot, glob.path), glob.glob)
+        Glob(chroot(args.root, glob.path), glob.glob)
         for glob in REMOVE_GLOBS
     ]
 
