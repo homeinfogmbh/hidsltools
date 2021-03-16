@@ -9,7 +9,7 @@ from typing import Optional
 from hidsltools.beep import beep
 from hidsltools.bsdtar import extract
 from hidsltools.device import Device
-from hidsltools.defaults import DEVICE, IMAGE
+from hidsltools.defaults import DEVICE, IMAGE, SSH_KEYS
 from hidsltools.errorhandler import ErrorHandler
 from hidsltools.fstab import genfstab
 from hidsltools.hostid import mkhostid
@@ -24,9 +24,6 @@ from hidsltools.wipefs import wipefs
 
 
 __all__ = ['main']
-
-
-SSH_KEYS_FILE = Path('/root/authorized_keys.json')
 
 
 def get_args() -> Namespace:
@@ -44,7 +41,7 @@ def get_args() -> Namespace:
     parser.add_argument('-m', '--mbr', action='store_true',
                         help='perform an MBR instead of an EFI installation')
     parser.add_argument('-s', '--ssh-keys', type=Path, metavar='file',
-                        default=SSH_KEYS_FILE,
+                        default=SSH_KEYS,
                         help='restore SSH keys from this JSON file')
     parser.add_argument('-q', '--quiet', action='store_true',
                         help='do not beep after completion')
