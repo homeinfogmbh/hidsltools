@@ -1,4 +1,4 @@
-"""Creating images."""
+"""Create HIDSL images."""
 
 from argparse import ArgumentParser, Namespace
 from datetime import date
