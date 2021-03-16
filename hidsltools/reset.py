@@ -74,7 +74,7 @@ def reset(args: Namespace) -> int:
 
     for file in get_files_to_be_removed(args.root):
         LOGGER.info('Removing: %s', file)
-        chroot(args.root, file).unlink(missing_ok=True)
+        file.unlink(missing_ok=True)
 
     LOGGER.info('Clearing journal.')
     vacuum(root=args.root, verbose=args.verbose)
