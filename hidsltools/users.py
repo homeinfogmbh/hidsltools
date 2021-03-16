@@ -5,13 +5,14 @@ from pathlib import Path
 from hidsltools.defaults import ROOT
 from hidsltools.functions import chroot, getent, rmsubtree
 from hidsltools.logging import LOGGER
+from hidsltools.types import Glob
 
 
 __all__ = ['rmdotfiles']
 
 
 DATA = Path('/var/lib/digsig')
-USERS = {'digsig', 'hidslcfg', 'homeinfo', 'root'}
+USERS = {'digsig', 'homeinfo', 'root'}
 
 
 def rmdotfiles(*, root: Path = ROOT) -> None:
@@ -22,4 +23,10 @@ def rmdotfiles(*, root: Path = ROOT) -> None:
     for user in sorted(USERS):
         home = getent(user, root=root).home
         LOGGER.debug('Cleaning home %s of user %s.', home, user)
-        rmsubtree(chroot(root, home))
+
+        if home == Path('/'):
+            LOGGER.warning('Skipping root directory.')
+            continue
+
+        for dotfile in Glob(chroot(root, home), '.*'):
+            rmsubtree(dotfile)
