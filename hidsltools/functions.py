@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from subprocess import DEVNULL, CompletedProcess, check_output, run
-from typing import IO, Iterable, List, Optional
+from typing import IO, Iterable, Optional
 
 from hidsltools.defaults import ROOT
 from hidsltools.logging import LOGGER
@@ -22,7 +22,7 @@ ARCH_CHROOT = '/usr/bin/arch-chroot'
 GETENT = '/usr/bin/getent'
 
 
-def arch_chroot(root: Path, command: Iterable[str]) -> List[str]:
+def arch_chroot(root: Path, command: Iterable[str]) -> list[str]:
     """Converts a command into a chrooted command."""
 
     return [ARCH_CHROOT, str(root), *command]
