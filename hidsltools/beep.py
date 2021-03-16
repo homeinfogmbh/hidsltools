@@ -10,7 +10,7 @@ __all__ = ['beep']
 
 
 BEEP = '/usr/bin/beep'
-MELODY = [
+MELODY = (
     Note(1000),
     Note(1500),
     Note(600),
@@ -20,7 +20,7 @@ MELODY = [
     Note(40, 2, 300),
     Note(60, 3),
     Note(50, 3)
-]
+)
 
 
 def get_args(melody: Iterable[Note]) -> Iterator[str]:
