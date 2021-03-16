@@ -1,4 +1,4 @@
-"""Resores HIDSL images."""
+"""Restores HIDSL images."""
 
 from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig
