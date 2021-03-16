@@ -28,7 +28,7 @@ def bsdtar(tarball: Path, *files: Path, chdir: Optional[Path] = None,
         command.append('-v')
 
     if compression is not None:
-        command.append(f'--{compression}')
+        command.append(f'--{compression.full_name}')
 
     if compression_level is not None:
         options.append(f'compression-level={compression_level}')

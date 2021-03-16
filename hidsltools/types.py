@@ -4,7 +4,7 @@ from __future__ import annotations
 from enum import Enum
 from pathlib import Path
 from re import fullmatch
-from typing import Iterator, NamedTuple, Union
+from typing import Iterator, NamedTuple, Optional, Union
 
 
 __all__ = [
@@ -22,16 +22,18 @@ class Compression(Enum):
     """Compression types."""
 
     XZ = 'xz'
-    BZIP2 = 'bzip2'
+    BZIP2 = ('bzip2', 'bz2')
     LRZIP = 'lrzip'
     LZ4 = 'lz4'
     ZSTD = 'zstd'
     LZMA = 'lzma'
     LZOP = 'lzop'
-    GZIP = 'gzip'
+    GZIP = ('gzip', 'gz')
 
-    def __str__(self):  # pylint: disable=E0307
-        return self.value
+    def __init__(self, full_name: str, suffix: Optional[str] = None):
+        """Creates a compression instance."""
+        self.full_name = full_name
+        self.suffix = suffix or full_name
 
 
 class DeviceType(NamedTuple):
