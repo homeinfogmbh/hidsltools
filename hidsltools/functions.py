@@ -14,7 +14,8 @@ __all__ = [
     'chroot',
     'exe',
     'getent',
-    'rmsubtree'
+    'rmsubtree',
+    'rmtree'
 ]
 
 
@@ -63,9 +64,17 @@ def getent(user: str, *, root: Optional[Path] = None) -> PasswdEntry:
 def rmsubtree(directory: Path) -> None:
     """Removes all files and folders below the given directory."""
 
-    for inode in directory.iterdir():
-        if inode.is_dir():
-            rmsubtree(inode)
-            inode.rmdir()
-        else:
-            inode.unlink(missing_ok=True)
+    for child in directory.iterdir():
+        rmtree(child)
+
+
+def rmtree(inode: Path) -> None:
+    """Recursively removes the inode."""
+
+    if inode.is_dir():
+        for child in inode.iterdir():
+            rmtree(child)
+
+        inode.rmdir()
+    else:
+        inode.unlink()
