@@ -1,13 +1,16 @@
 """SSH related functions."""
 
+from json import load
+from os import chown, linesep
 from pathlib import Path
+from typing import Iterable
 
 from hidsltools.defaults import ROOT
-from hidsltools.functions import chroot, exe
+from hidsltools.functions import chroot, exe, getent
 from hidsltools.types import Glob
 
 
-__all__ = ['HOST_KEYS', 'generate_host_keys']
+__all__ = ['HOST_KEYS', 'generate_host_keys', 'restore_authorized_keys']
 
 
 CIPHERS = {'dsa', 'rsa', 'ecdsa', 'ed25519'}
@@ -30,3 +33,31 @@ def generate_host_keys(*, root: Path = ROOT, verbose: bool = False) -> None:
 
     for cipher in CIPHERS:
         generate_host_key(cipher, root=root, verbose=verbose)
+
+
+def install_authorized_keys(user: str, keys: Iterable[str], *,
+                            root: Path = ROOT) -> None:
+    """Installs the authorized keys for the given user."""
+
+    user = getent(user, root=root)
+    sshdir = chroot(root, user.home).joinpath('.ssh')
+    sshdir.mkdir(mode=0o700, exist_ok=True)
+    chown(sshdir, user.uid, user.gid)
+    authorized_keys = sshdir.joinpath('authorized_keys')
+
+    with authorized_keys.open('w') as file:
+        for key in keys:
+            file.write(key)
+            file.write(linesep)
+
+    chown(authorized_keys, user.uid, user.gid)
+
+
+def restore_authorized_keys(path: Path, *, root: Path = ROOT) -> None:
+    """Restores authorized keys from a JSON file."""
+
+    with path.open('r') as file:
+        json = load(file)
+
+    for user, keys in json.items():
+        install_authorized_keys(user, keys, root=root)

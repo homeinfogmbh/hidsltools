@@ -18,12 +18,15 @@ from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mkfs import mkfs
 from hidsltools.mount import MountContext
 from hidsltools.sgdisk import mkparts
-from hidsltools.ssh import generate_host_keys
+from hidsltools.ssh import generate_host_keys, restore_authorized_keys
 from hidsltools.syslinux import install_update
 from hidsltools.wipefs import wipefs
 
 
 __all__ = ['main']
+
+
+SSH_KEYS_FILE = Path('/root/authorized_keys.json')
 
 
 def get_args() -> Namespace:
@@ -40,6 +43,9 @@ def get_args() -> Namespace:
                         help='wipe filesystems before partitioning')
     parser.add_argument('-m', '--mbr', action='store_true',
                         help='perform an MBR instead of an EFI installation')
+    parser.add_argument('-s', '--ssh-keys', type=Path, metavar='file',
+                        default=SSH_KEYS_FILE,
+                        help='restore SSH keys from this JSON file')
     parser.add_argument('-q', '--quiet', action='store_true',
                         help='do not beep after completion')
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -61,6 +67,8 @@ def restore_image(args: Namespace, mountpoint: Optional[Path] = None) -> None:
     mkhostid(root=mountpoint)
     LOGGER.info('Generating SSH host keys.')
     generate_host_keys(root=mountpoint, verbose=args.verbose)
+    LOGGER.info('Restoring SSH keys.')
+    restore_authorized_keys(args.ssh_keys, root=mountpoint)
     LOGGER.info('Generating fstab.')
     genfstab(root=mountpoint, verbose=args.verbose)
 
