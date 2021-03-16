@@ -3,7 +3,6 @@
 from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
-from sys import exit    # pylint: disable=W0622
 from typing import Iterator
 
 from hidsltools.errorhandler import ErrorHandler
@@ -85,11 +84,11 @@ def reset(args: Namespace) -> int:
     return 0
 
 
-def main() -> None:
+def main() -> int:
     """Runs the script."""
 
     args = get_args()
     basicConfig(format=FORMAT, level=DEBUG if args.debug else INFO)
 
     with ErrorHandler(LOGGER):
-        exit(reset(args))
+        return reset(args)

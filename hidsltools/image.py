@@ -5,7 +5,6 @@ from datetime import date
 from getpass import getpass
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
-from sys import exit    # pylint: disable=W0622
 from tempfile import TemporaryDirectory
 
 from hidsltools.bsdtar import create
@@ -87,11 +86,11 @@ def mkhidslimg(args: Namespace) -> int:
     return make_image(file, args)
 
 
-def main() -> None:
+def main() -> int:
     """Runs the program."""
 
     args = get_args()
     basicConfig(format=FORMAT, level=DEBUG if args.debug else INFO)
 
     with ErrorHandler(LOGGER):
-        exit(mkhidslimg(args))
+        return mkhidslimg(args)
