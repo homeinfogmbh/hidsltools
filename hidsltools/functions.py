@@ -37,6 +37,7 @@ def chroot(root: Path, path: Path) -> Path:
     return root.joinpath(path)
 
 
+# pylint: disable=W0622
 def exe(command, *, input: Optional[bytes] = None, stdout: Optional[IO] = None,
         verbose: bool = False) -> CompletedProcess:
     """Returns stdout and stderr parameters for subprocess.run()."""
