@@ -17,7 +17,7 @@ from hidsltools.ssh import HOST_KEYS
 from hidsltools.syslinux import AUTOUPDATE
 from hidsltools.systemd import vacuum, disable, enable
 from hidsltools.types import Glob
-from hidsltools.users import rmdotfiles
+from hidsltools.users import clean_homes
 
 
 __all__ = ['main']
@@ -79,8 +79,8 @@ def reset(args: Namespace) -> int:
     vacuum(root=args.root, verbose=args.verbose)
     LOGGER.info('Cleaning up package cache.')
     clean(root=args.root)
-    LOGGER.info('Removing dotfiles.')
-    rmdotfiles(root=args.root)
+    LOGGER.info('Cleaning up home folders.')
+    clean_homes(root=args.root)
     return 0
 
 
