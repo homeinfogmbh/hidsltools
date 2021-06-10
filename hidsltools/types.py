@@ -4,6 +4,7 @@ from __future__ import annotations
 from enum import Enum
 from pathlib import Path
 from re import fullmatch
+from tempfile import TemporaryDirectory
 from typing import Iterator, NamedTuple, Optional, Union
 
 
@@ -14,7 +15,8 @@ __all__ = [
     'Glob',
     'Note',
     'Partition',
-    'PasswdEntry'
+    'PasswdEntry',
+    'SafeTemporaryDirectory'
 ]
 
 
@@ -120,3 +122,15 @@ class PasswdEntry(NamedTuple):
         """Creates the passwd entry from a string."""
         name, passwd, uid, gid, gecos, home, shell = string.split(sep)
         return cls(name, passwd, int(uid), int(gid), gecos, Path(home), shell)
+
+
+class SafeTemporaryDirectory(TemporaryDirectory):
+    """Temporary directory that only gets
+    deleted if no exception occured.
+    """
+
+    def __exit__(self, typ, value, traceback):
+        if typ is None and value is None:
+            return super().__exit__(typ, value, traceback)
+
+        return None

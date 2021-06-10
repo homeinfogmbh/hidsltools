@@ -79,8 +79,8 @@ def mkhidslimg(args: Namespace) -> int:
     file = Path(get_filename(args))
 
     if args.cifs:
-        with TemporaryDirectory() as tmpd:
-            with cifs_mount(tmpd, args) as mount:
+        with TemporaryDirectory() as tmp:
+            with cifs_mount(tmp, args) as mount:
                 return make_image(chroot(mount, file), args)
 
     return make_image(file, args)
