@@ -78,7 +78,7 @@ def reset(args: Namespace) -> int:
     LOGGER.info('Clearing journal.')
     vacuum(root=args.root, verbose=args.verbose)
     LOGGER.info('Cleaning up package cache.')
-    clean(root=args.root)
+    clean(root=args.root, verbose=args.verbose)
     LOGGER.info('Cleaning up home folders.')
     clean_homes(root=args.root)
     return 0
