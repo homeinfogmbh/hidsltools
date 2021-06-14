@@ -12,7 +12,7 @@ from hidsltools.hostid import HOST_ID, HOSTNAME, MACHINE_ID
 from hidsltools.initcpio import INITRAMFS
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.openvpn import delete_client_config
-from hidsltools.pacman import clean
+from hidsltools.pacman import CACHE, clean
 from hidsltools.ssh import HOST_KEYS
 from hidsltools.syslinux import AUTOUPDATE
 from hidsltools.systemd import vacuum, disable, enable
@@ -28,7 +28,7 @@ DESCRIPTION = 'Resets operating system for image creation.'
 WARNING = 'unconfigured-warning.service'
 MOUNTPOINT = Path('/mnt')
 REMOVE_FILES = [AUTOUPDATE, FSTAB, HOST_ID, HOSTNAME, MACHINE_ID]
-REMOVE_GLOBS = [INITRAMFS, HOST_KEYS]
+REMOVE_GLOBS = [CACHE, INITRAMFS, HOST_KEYS]
 
 
 def get_args() -> Namespace:

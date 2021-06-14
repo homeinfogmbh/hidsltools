@@ -4,11 +4,13 @@ from pathlib import Path
 from typing import Optional
 
 from hidsltools.functions import exe
+from hidsltools.types import Glob
 
 
-__all__ = ['LOCKFILE', 'clean']
+__all__ = ['CACHE', 'LOCKFILE', 'clean']
 
 
+CACHE = Glob('/var/cache/pacman/pkg', '*.pkg*')
 LOCKFILE = Path('/var/lib/pacman/db.lck')
 PACMAN = '/usr/bin/pacman'
 
