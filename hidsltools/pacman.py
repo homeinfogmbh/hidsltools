@@ -36,7 +36,7 @@ def pacman_scc(*, root: Optional[Path] = None, verbose: bool = False) -> None:
 
 
 def clean(*, root: Optional[Path] = None, verbose: bool = False) -> None:
-    """Cleans the pacman cache."""
+    """Clean the pacman cache."""
 
     pacman_sc(root=root, verbose=verbose)
     pacman_scc(root=root, verbose=verbose)
