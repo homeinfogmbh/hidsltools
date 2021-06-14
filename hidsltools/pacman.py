@@ -15,8 +15,19 @@ LOCKFILE = Path('/var/lib/pacman/db.lck')
 PACMAN = '/usr/bin/pacman'
 
 
-def clean(*, root: Optional[Path] = None, verbose: bool = False) -> None:
-    """Cleans the pacman cache."""
+def pacman_sc(*, root: Optional[Path] = None, verbose: bool = False) -> None:
+    """Run pacman -Sc."""
+
+    command = [PACMAN, '-S', '-c', '--noconfirm']
+
+    if root is not None:
+        command += ['--sysroot', str(root)]
+
+    exe(command, verbose=verbose)
+
+
+def pacman_scc(*, root: Optional[Path] = None, verbose: bool = False) -> None:
+    """Run pacman -Scc."""
 
     command = [PACMAN, '-S', '-c', '-c', '--noconfirm']
 
@@ -24,3 +35,10 @@ def clean(*, root: Optional[Path] = None, verbose: bool = False) -> None:
         command += ['--sysroot', str(root)]
 
     exe(command, verbose=verbose)
+
+
+def clean(*, root: Optional[Path] = None, verbose: bool = False) -> None:
+    """Cleans the pacman cache."""
+
+    pacman_sc(root=root, verbose=verbose)
+    pacman_scc(root=root, verbose=verbose)
