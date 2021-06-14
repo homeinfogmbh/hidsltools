@@ -5,7 +5,6 @@ from datetime import date
 from getpass import getpass
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
-from tempfile import TemporaryDirectory
 
 from hidsltools.bsdtar import create
 from hidsltools.defaults import ROOT
@@ -13,7 +12,10 @@ from hidsltools.errorhandler import ErrorHandler
 from hidsltools.functions import chroot
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mount import MountContext
-from hidsltools.types import Compression, Filesystem, Partition
+from hidsltools.types import Compression
+from hidsltools.types import Filesystem
+from hidsltools.types import Partition
+from hidsltools.types import SafeTemporaryDirectory
 
 
 __all__ = ['main']
@@ -79,8 +81,8 @@ def mkhidslimg(args: Namespace) -> int:
     file = Path(get_filename(args))
 
     if args.cifs:
-        with TemporaryDirectory() as tmp:
-            with cifs_mount(tmp, args) as mount:
+        with SafeTemporaryDirectory() as tmpd:
+            with cifs_mount(tmpd, args) as mount:
                 return make_image(chroot(mount, file), args)
 
     return make_image(file, args)
