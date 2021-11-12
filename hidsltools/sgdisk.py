@@ -30,14 +30,14 @@ def mkroot(device: Device, *, partno: int = 1,
     exe([SGDISK, '-t', f'{partno}:8304', str(device)], verbose=verbose)
 
 
-def mkparts(device: Device, *, mbr: bool = False,
+def mkparts(device: Device, *, efi: bool = True,
             verbose: bool = False) -> Iterator[Partition]:
     """Partitions a disk."""
 
     exe([SGDISK, '-og', str(device)], verbose=verbose)
     root_partno = 1
 
-    if not mbr:
+    if efi:
         root_partno = 2
         mkefipart(device, verbose=verbose)
         partition = device.partition(1)

@@ -94,7 +94,8 @@ def restore(args: Namespace) -> None:
     LOGGER.info('Partitioning disk: %s', args.device)
     partitions = []
 
-    for partition in mkparts(args.device, mbr=args.mbr, verbose=args.verbose):
+    for partition in mkparts(args.device, efi=not args.mbr,
+                             verbose=args.verbose):
         partitions.append(partition)
         LOGGER.debug('Created partition: %s', partition)
 
