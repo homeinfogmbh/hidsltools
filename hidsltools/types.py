@@ -79,8 +79,8 @@ class Note(NamedTuple):
     """A note for a beep melody."""
 
     frequency: int
-    repetitions: int = None
-    length: int = None
+    repetitions: Optional[int] = None
+    length: Optional[int] = None
 
     @property
     def args(self) -> Iterator[str]:
@@ -103,7 +103,7 @@ class Partition(NamedTuple):
     device: Path
     mountpoint: Path
     filesystem: Filesystem
-    label: str = None
+    label: Optional[str] = None
 
 
 class PasswdEntry(NamedTuple):
