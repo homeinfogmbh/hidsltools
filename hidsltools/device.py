@@ -21,9 +21,9 @@ class Device(type(Path())):
     @property
     def devtype(self):
         """Returns the device type."""
-        for devtype in DEVICE_TYPES:
-            if devtype.check(self):
-                return devtype
+        for device_type in DEVICE_TYPES:
+            if device_type.check(self):
+                return device_type
 
         raise ValueError('Unknown block device type:', self)
 
