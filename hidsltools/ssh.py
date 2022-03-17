@@ -6,7 +6,8 @@ from pathlib import Path
 from typing import Iterable
 
 from hidsltools.defaults import ROOT
-from hidsltools.functions import chroot, exe, getent
+from hidsltools.functions import chroot, exe
+from hidsltools.passwd import get_user
 from hidsltools.types import Glob
 
 
@@ -39,7 +40,7 @@ def install_authorized_keys(user: str, keys: Iterable[str], *,
                             root: Path = ROOT) -> None:
     """Installs the authorized keys for the given user."""
 
-    user = getent(user, root=root)
+    user = get_user(user, root=root)
     sshdir = chroot(root, user.home).joinpath('.ssh')
     sshdir.mkdir(mode=0o700, exist_ok=True)
     chown(sshdir, user.uid, user.gid)
