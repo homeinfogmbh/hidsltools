@@ -24,7 +24,7 @@ MELODY = (
 
 
 def get_args(melody: Iterable[Note]) -> Iterator[str]:
-    """Yields corresponsing beep arguments."""
+    """Yields corresponding beep arguments."""
 
     first, *rest = melody
     yield from first.args
