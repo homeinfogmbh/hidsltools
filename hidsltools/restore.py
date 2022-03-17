@@ -30,25 +30,40 @@ def get_args() -> Namespace:
     """Returns the CLI arguments."""
 
     parser = ArgumentParser(description='Restore operating system images.')
-    parser.add_argument('device', nargs='?', type=Device,
-                        default=DEVICE, help='target device')
-    parser.add_argument('-i', '--image', type=Path, metavar='file',
-                        default=IMAGE, help='image file')
-    parser.add_argument('-r', '--root', type=Path, metavar='mountpoint',
-                        help='target root directory')
-    parser.add_argument('-w', '--wipefs', action='store_true',
-                        help='wipe filesystems before partitioning')
-    parser.add_argument('-m', '--mbr', action='store_true',
-                        help='perform an MBR instead of an EFI installation')
-    parser.add_argument('-s', '--ssh-keys', type=Path, metavar='file',
-                        default=SSH_KEYS,
-                        help='restore SSH keys from this JSON file')
-    parser.add_argument('-q', '--quiet', action='store_true',
-                        help='do not beep after completion')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='show output of subprocesses')
-    parser.add_argument('-d', '--debug', action='store_true',
-                        help='enable verbose logging')
+    parser.add_argument(
+        'device', nargs='?', type=Device, default=DEVICE, help='target device'
+    )
+    parser.add_argument(
+        '-i', '--image', type=Path, metavar='file', default=IMAGE,
+        help='image file'
+    )
+    parser.add_argument(
+        '-r', '--root', type=Path, metavar='mountpoint',
+        help='target root directory'
+    )
+    parser.add_argument(
+        '-w', '--wipefs', action='store_true',
+        help='wipe filesystems before partitioning'
+    )
+    parser.add_argument(
+        '-m', '--mbr', action='store_true',
+        help='perform an MBR instead of an EFI installation'
+    )
+    parser.add_argument(
+        '-s', '--ssh-keys', type=Path, metavar='file', default=SSH_KEYS,
+        help='restore SSH keys from this JSON file'
+    )
+    parser.add_argument(
+        '-q', '--quiet', action='store_true',
+        help='do not beep after completion'
+    )
+    parser.add_argument(
+        '-v', '--verbose', action='store_true',
+        help='show output of subprocesses'
+    )
+    parser.add_argument(
+        '-d', '--debug', action='store_true', help='enable verbose logging'
+    )
     return parser.parse_args()
 
 
@@ -94,16 +109,21 @@ def restore(args: Namespace) -> None:
     LOGGER.info('Partitioning disk: %s', args.device)
     partitions = []
 
-    for partition in mkparts(args.device, efi=not args.mbr,
-                             verbose=args.verbose):
+    for partition in mkparts(
+            args.device, efi=not args.mbr, verbose=args.verbose
+    ):
         partitions.append(partition)
         LOGGER.debug('Created partition: %s', partition)
 
     LOGGER.info('Creating file systems.')
 
     for partition in partitions:
-        LOGGER.info('Formatting %s with %s as %s.', partition.device,
-                    partition.filesystem, partition.label)
+        LOGGER.info(
+            'Formatting %s with %s as %s.',
+            partition.device,
+            partition.filesystem,
+            partition.label
+        )
         mkfs(partition.device, partition.filesystem, label=partition.label,
              verbose=args.verbose)
 
