@@ -14,8 +14,11 @@ INITRAMFS = Glob('/boot', 'initramfs-linux*.img')
 MKINITCPIO = '/usr/bin/mkinitcpio'
 
 
-def mkinitcpio(*, chroot: Optional[Path] = None,
-               verbose: bool = False) -> None:
+def mkinitcpio(
+        *,
+        chroot: Optional[Path] = None,
+        verbose: bool = False
+) -> None:
     """Re-generates the initramfs."""
 
     command = [MKINITCPIO, '-P']
