@@ -56,11 +56,11 @@ class Filesystem(Enum):
     EXT4 = 'ext4'
     VFAT = 'vfat'
 
-    def __str__(self):  # pylint: disable=E0307
+    def __str__(self):
         return self.value
 
 
-class Glob:     # pylint: disable=R0903
+class Glob:
     """A re-iterable path glob."""
 
     __slots__ = ('path', 'glob')
