@@ -36,8 +36,13 @@ def chroot(root: Path, path: Path) -> Path:
     return root.joinpath(path)
 
 
-def exe(command, *, input: Optional[bytes] = None, stdout: Optional[IO] = None,
-        verbose: bool = False) -> CompletedProcess:
+def exe(
+        command,
+        *,
+        input: Optional[bytes] = None,
+        stdout: Optional[IO] = None,
+        verbose: bool = False
+) -> CompletedProcess:
     """Returns stdout and stderr parameters for subprocess.run()."""
 
     stderr = None if verbose else DEVNULL
