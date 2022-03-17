@@ -20,8 +20,12 @@ KEY_TEMPLATE = '/etc/ssh/ssh_host_{cipher}_key'
 SSH_KEYGEN = '/usr/bin/ssh-keygen'
 
 
-def generate_host_key(cipher: str, *, root: Path = ROOT,
-                      verbose: bool = False) -> None:
+def generate_host_key(
+        cipher: str,
+        *,
+        root: Path = ROOT,
+        verbose: bool = False
+) -> None:
     """Generates an SSH host key."""
 
     path = chroot(root, Path(KEY_TEMPLATE.format(cipher=cipher)))
@@ -36,8 +40,12 @@ def generate_host_keys(*, root: Path = ROOT, verbose: bool = False) -> None:
         generate_host_key(cipher, root=root, verbose=verbose)
 
 
-def install_authorized_keys(user: str, keys: Iterable[str], *,
-                            root: Path = ROOT) -> None:
+def install_authorized_keys(
+        user: str,
+        keys: Iterable[str],
+        *,
+        root: Path = ROOT
+) -> None:
     """Installs the authorized keys for the given user."""
 
     user = get_user(user, root=root)
