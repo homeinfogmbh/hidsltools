@@ -13,8 +13,11 @@ AUTOUPDATE = Path('/boot/syslinux/SYSLINUX_AUTOUPDATE')
 SYSLINUX_INSTALL_UPDATE = '/usr/bin/syslinux-install_update'
 
 
-def install_update(*, chroot: Optional[Path] = None,
-                   verbose: bool = False) -> None:
+def install_update(
+        *,
+        chroot: Optional[Path] = None,
+        verbose: bool = False
+) -> None:
     """Installs or updates syslinux."""
 
     command = [SYSLINUX_INSTALL_UPDATE, '-i', '-a', '-m']
