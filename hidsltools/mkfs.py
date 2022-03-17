@@ -13,8 +13,13 @@ __all__ = ['mkfs']
 MKFS = '/usr/bin/mkfs'
 
 
-def mkvfat(device: Path, *, label: Optional[str] = None, fat_size: int = 32,
-           verbose: bool = False) -> None:
+def mkvfat(
+        device: Path,
+        *,
+        label: Optional[str] = None,
+        fat_size: int = 32,
+        verbose: bool = False
+) -> None:
     """Creates a vfat file system."""
 
     command = [MKFS, '-t', 'vfat']
@@ -29,8 +34,12 @@ def mkvfat(device: Path, *, label: Optional[str] = None, fat_size: int = 32,
     exe(command, verbose=verbose)
 
 
-def mkext4(device: Path, *, label: Optional[str] = None,
-           verbose: bool = False) -> None:
+def mkext4(
+        device: Path,
+        *,
+        label: Optional[str] = None,
+        verbose: bool = False
+) -> None:
     """Creates an ext4 file system."""
 
     command = [MKFS, '-t', 'ext4', '-F']
@@ -42,8 +51,13 @@ def mkext4(device: Path, *, label: Optional[str] = None,
     exe(command, verbose=verbose)
 
 
-def mkfs(device: Path, filesystem: Filesystem, *,
-         verbose: bool = False, **kwargs) -> None:
+def mkfs(
+        device: Path,
+        filesystem: Filesystem,
+        *,
+        verbose: bool = False,
+        **kwargs
+) -> None:
     """Creates the given file system."""
 
     if filesystem == Filesystem.VFAT:
