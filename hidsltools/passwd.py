@@ -4,6 +4,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Iterator, NamedTuple
 
+from hidsltools.defaults import ROOT
+
 
 __all__ = ['PasswdEntry', 'passwd']
 
@@ -41,7 +43,7 @@ class PasswdEntry(NamedTuple):
         return self.password
 
 
-def passwd(*, root: Path = Path('/')) -> Iterator[PasswdEntry]:
+def passwd(*, root: Path = ROOT) -> Iterator[PasswdEntry]:
     """Yields passwd entries."""
 
     with (root / ETC_PASSWD).open('r', encoding='utf-8') as file:
