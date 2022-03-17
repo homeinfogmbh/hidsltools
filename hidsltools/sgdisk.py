@@ -47,14 +47,14 @@ def mkparts(
     """Partitions a disk."""
 
     exe([SGDISK, '-og', str(device)], verbose=verbose)
-    root_partno = 1
+    root_partition_number = 1
 
     if efi:
-        root_partno = 2
+        root_partition_number = 2
         mkefipart(device, verbose=verbose)
         partition = device.partition(1)
         yield Partition(partition, BOOT, Filesystem.VFAT, 'EFI')
 
-    mkroot(device, partno=root_partno, verbose=verbose)
-    partition = device.partition(root_partno)
+    mkroot(device, partno=root_partition_number, verbose=verbose)
+    partition = device.partition(root_partition_number)
     yield Partition(partition, ROOT, Filesystem.EXT4, 'root')
