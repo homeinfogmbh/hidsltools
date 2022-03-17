@@ -1,19 +1,17 @@
 """Common functions."""
 
 from pathlib import Path
-from subprocess import DEVNULL, CompletedProcess, check_output, run
+from subprocess import DEVNULL, CompletedProcess, run
 from typing import IO, Iterable, Optional
 
 from hidsltools.defaults import ROOT
 from hidsltools.logging import LOGGER
-from hidsltools.types import PasswdEntry
 
 
 __all__ = [
     'arch_chroot',
     'chroot',
     'exe',
-    'getent',
     'rmsubtree',
     'rmtree'
 ]
@@ -47,18 +45,6 @@ def exe(command, *, input: Optional[bytes] = None, stdout: Optional[IO] = None,
     stdout = stdout if stdout is not None else None if verbose else DEVNULL
     LOGGER.debug('Running command: %s', command)
     return run(command, input=input, check=True, stderr=stderr, stdout=stdout)
-
-
-def getent(user: str, *, root: Optional[Path] = None) -> PasswdEntry:
-    """Returns the home of the user."""
-
-    command = [GETENT, 'passwd', user]
-
-    if root is not None:
-        command = arch_chroot(root, command)
-
-    text = check_output(command, text=True)
-    return PasswdEntry.from_string(text.strip())
 
 
 def rmsubtree(directory: Path) -> None:
