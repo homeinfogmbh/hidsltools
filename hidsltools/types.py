@@ -138,7 +138,7 @@ class PasswdEntry(NamedTuple):
 
 class SafeTemporaryDirectory(TemporaryDirectory):
     """Temporary directory that only gets
-    deleted if no exception occured.
+    deleted if no exception occurred.
     """
 
     def __exit__(self, typ, value, traceback):
