@@ -16,9 +16,14 @@ MOUNT = '/usr/bin/mount'
 UMOUNT = '/usr/bin/umount'
 
 
-def mount(device: Path, mountpoint: Path, *,
-          fstype: Optional[Filesystem] = None, verbose: bool = False,
-          **options) -> None:
+def mount(
+        device: Path,
+        mountpoint: Path,
+        *,
+        fstype: Optional[Filesystem] = None,
+        verbose: bool = False,
+        **options
+) -> None:
     """Mounts a partition."""
 
     command = [MOUNT]
@@ -42,8 +47,13 @@ def umount(mountpoint_or_device: Path, *, verbose: bool = False) -> None:
 class MountContext:
     """Context manager for mounts."""
 
-    def __init__(self, partitions: Iterable[Partition], *,
-                 root: Path = ROOT, verbose: bool = False, **options):
+    def __init__(
+            self,
+            partitions: Iterable[Partition],
+            *,
+            root: Path = ROOT,
+            verbose: bool = False, **options
+    ):
         """Sets the partitions."""
         self.partitions = partitions
         self.root = Path(root)
