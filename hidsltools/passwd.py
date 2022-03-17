@@ -2,45 +2,16 @@
 
 from __future__ import annotations
 from pathlib import Path
-from typing import Callable, Iterator, NamedTuple
+from typing import Callable, Iterator
 
 from hidsltools.defaults import ROOT
+from hidsltools.types import PasswdEntry
 
 
-__all__ = ['PasswdEntry', 'get_user', 'passwd']
+__all__ = ['get_user', 'passwd']
 
 
 ETC_PASSWD = Path('etc/passwd')
-
-
-class PasswdEntry(NamedTuple):
-    """An /etc/passwd entry."""
-
-    name: str
-    password: str
-    uid: int
-    gid: int
-    gecos: str
-    directory: Path
-    shell: str
-
-    @classmethod
-    def from_string(cls, string: str) -> PasswdEntry:
-        """Creates a passwd entry from a string."""
-        name, password, uid, gid, gecos, directory, shell = string.split(':')
-        return cls(
-            name, password, int(uid), int(gid), gecos, Path(directory), shell
-        )
-
-    @property
-    def home(self) -> Path:
-        """Returns the home directory. Alias to directory."""
-        return self.directory
-
-    @property
-    def passwd(self) -> str:
-        """Returns the password. Alias to password."""
-        return self.password
 
 
 def passwd(*, root: Path = ROOT) -> Iterator[PasswdEntry]:

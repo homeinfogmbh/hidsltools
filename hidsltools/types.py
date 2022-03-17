@@ -107,21 +107,33 @@ class Partition(NamedTuple):
 
 
 class PasswdEntry(NamedTuple):
-    """An entry of /etc/passwd."""
+    """An /etc/passwd entry."""
 
     name: str
-    passwd: str
+    password: str
     uid: int
     gid: int
     gecos: str
-    home: Path
+    directory: Path
     shell: str
 
     @classmethod
-    def from_string(cls, string: str, *, sep: str = ':') -> PasswdEntry:
-        """Creates the passwd entry from a string."""
-        name, passwd, uid, gid, gecos, home, shell = string.split(sep)
-        return cls(name, passwd, int(uid), int(gid), gecos, Path(home), shell)
+    def from_string(cls, string: str) -> PasswdEntry:
+        """Creates a passwd entry from a string."""
+        name, password, uid, gid, gecos, directory, shell = string.split(':')
+        return cls(
+            name, password, int(uid), int(gid), gecos, Path(directory), shell
+        )
+
+    @property
+    def home(self) -> Path:
+        """Returns the home directory. Alias to directory."""
+        return self.directory
+
+    @property
+    def passwd(self) -> str:
+        """Returns the password. Alias to password."""
+        return self.password
 
 
 class SafeTemporaryDirectory(TemporaryDirectory):
