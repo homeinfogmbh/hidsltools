@@ -13,9 +13,14 @@ __all__ = ['bsdtar', 'create', 'extract']
 BSDTAR = '/usr/bin/bsdtar'
 
 
-def bsdtar(tarball: Path, *files: Path, chdir: Optional[Path] = None,
-           compression: Compression = Compression.LZOP,
-           compression_level: int = 9, verbose: bool = False) -> None:
+def bsdtar(
+        tarball: Path,
+        *files: Path,
+        chdir: Optional[Path] = None,
+        compression: Compression = Compression.LZOP,
+        compression_level: int = 9,
+        verbose: bool = False
+) -> None:
     """Creates a tarball from the given files."""
 
     command = [BSDTAR, '-c', '-p', '-f', str(tarball)]
@@ -39,9 +44,14 @@ def bsdtar(tarball: Path, *files: Path, chdir: Optional[Path] = None,
     exe([*command, *files], verbose=verbose)
 
 
-def create(tarball: Path, root: Path, *,
-           compression: Compression = Compression.LZOP,
-           compression_level: int = 9, verbose: bool = False) -> None:
+def create(
+        tarball: Path,
+        root: Path,
+        *,
+        compression: Compression = Compression.LZOP,
+        compression_level: int = 9,
+        verbose: bool = False
+) -> None:
     """Creates a tarball from a root file system mount point."""
 
     files = [inode.relative_to(root) for inode in root.iterdir()]
@@ -49,8 +59,12 @@ def create(tarball: Path, root: Path, *,
                   compression_level=compression_level, verbose=verbose)
 
 
-def extract(tarball: Path, target: Optional[Path] = None, *,
-            verbose: bool = False) -> None:
+def extract(
+        tarball: Path,
+        target: Optional[Path] = None,
+        *,
+        verbose: bool = False
+) -> None:
     """Extracts an image using bsdtar."""
 
     command = [BSDTAR, '-x', '-p', '-f', str(tarball)]
