@@ -47,6 +47,10 @@ def get_args() -> Namespace:
         help='show output of subprocesses'
     )
     parser.add_argument(
+        '-f', '--force', action='store_true',
+        help='do not error out if root is not a mountpoint'
+    )
+    parser.add_argument(
         '-d', '--debug', action='store_true', help='enable verbose logging'
     )
     return parser.parse_args()
@@ -67,8 +71,11 @@ def reset(args: Namespace) -> int:
     """Performs the reset."""
 
     if not args.root.is_mount():
-        LOGGER.error('Specified root is not a mount point.')
-        return 1
+        if not args.force:
+            LOGGER.error('Specified root is not a mount point.')
+            return 1
+
+        LOGGER.warning('Specified root is not a mount point.')
 
     LOGGER.info('Disabling application.service.')
     disable(APPLICATION, root=args.root, verbose=args.verbose)
