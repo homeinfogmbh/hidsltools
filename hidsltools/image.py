@@ -30,20 +30,30 @@ def get_args() -> Namespace:
 
     parser = ArgumentParser(description='Creates HIDSL images.')
     parser.add_argument('root', type=Path, help='reference system root')
-    parser.add_argument('-f', '--file', default=FILENAME_TEMPLATE,
-                        metavar='filename', help='the image file name')
+    parser.add_argument(
+        '-f', '--file', default=FILENAME_TEMPLATE, metavar='filename',
+        help='the image file name'
+    )
     parser.add_argument('-c', '--cifs', metavar='share', help='CIFS share')
-    parser.add_argument('-u', '--user', default=USER_NAME, metavar='name',
-                        help='CIFS user name')
-    parser.add_argument('-x', '--compression', type=Compression,
-                        metavar='compression', default=Compression.LZOP,
-                        help='compression algorithm')
-    parser.add_argument('-l', '--compression-level', type=int, metavar='level',
-                        default=9, help='compression level')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='show output of subprocesses')
-    parser.add_argument('-d', '--debug', action='store_true',
-                        help='enable verbose logging')
+    parser.add_argument(
+        '-u', '--user', default=USER_NAME, metavar='name',
+        help='CIFS user name'
+    )
+    parser.add_argument(
+        '-x', '--compression', type=Compression, metavar='compression',
+        default=Compression.LZOP, help='compression algorithm'
+    )
+    parser.add_argument(
+        '-l', '--compression-level', type=int, metavar='level', default=9,
+        help='compression level'
+    )
+    parser.add_argument(
+        '-v', '--verbose', action='store_true',
+        help='show output of subprocesses'
+    )
+    parser.add_argument(
+        '-d', '--debug', action='store_true', help='enable verbose logging'
+    )
     return parser.parse_args()
 
 
@@ -59,15 +69,18 @@ def cifs_mount(mountpoint: Path, args: Namespace) -> MountContext:
     passwd = getpass('CIFS password: ')
     options = {'user': args.user, 'password': passwd}
     fstab = Partition(args.cifs, ROOT, Filesystem.CIFS)
-    return MountContext([fstab], root=mountpoint, verbose=args.verbose,
-                        **options)
+    return MountContext(
+        [fstab], root=mountpoint, verbose=args.verbose, **options
+    )
 
 
 def make_image(file: Path, args: Namespace) -> int:
     """Creates a tarball from a reference system's root directory."""
 
-    create(file, args.root, compression=args.compression,
-           compression_level=args.compression_level, verbose=args.verbose)
+    create(
+        file, args.root, compression=args.compression,
+        compression_level=args.compression_level, verbose=args.verbose
+    )
     return 0
 
 
