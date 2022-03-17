@@ -41,10 +41,10 @@ def install_authorized_keys(user: str, keys: Iterable[str], *,
     """Installs the authorized keys for the given user."""
 
     user = get_user(user, root=root)
-    sshdir = chroot(root, user.home).joinpath('.ssh')
-    sshdir.mkdir(mode=0o700, exist_ok=True)
-    chown(sshdir, user.uid, user.gid)
-    authorized_keys = sshdir.joinpath('authorized_keys')
+    ssh_dir = chroot(root, user.home).joinpath('.ssh')
+    ssh_dir.mkdir(mode=0o700, exist_ok=True)
+    chown(ssh_dir, user.uid, user.gid)
+    authorized_keys = ssh_dir.joinpath('authorized_keys')
 
     with authorized_keys.open('w') as file:
         for key in keys:
