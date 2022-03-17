@@ -2,7 +2,7 @@
 
 from logging import Logger
 from subprocess import CalledProcessError
-from sys import exit    # pylint: disable=W0622
+from sys import exit
 
 
 __all__ = ['ErrorHandler']
