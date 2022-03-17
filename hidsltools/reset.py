@@ -35,14 +35,20 @@ def get_args() -> Namespace:
     """Returns the CLI arguments."""
 
     parser = ArgumentParser(description=DESCRIPTION)
-    parser.add_argument('root', type=Path, default=MOUNTPOINT,
-                        help='the target system')
-    parser.add_argument('-q', '--quiet', action='store_true',
-                        help='do not beep after completion')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='show output of subprocesses')
-    parser.add_argument('-d', '--debug', action='store_true',
-                        help='enable verbose logging')
+    parser.add_argument(
+        'root', type=Path, default=MOUNTPOINT, help='the target system'
+    )
+    parser.add_argument(
+        '-q', '--quiet', action='store_true',
+        help='do not beep after completion'
+    )
+    parser.add_argument(
+        '-v', '--verbose', action='store_true',
+        help='show output of subprocesses'
+    )
+    parser.add_argument(
+        '-d', '--debug', action='store_true', help='enable verbose logging'
+    )
     return parser.parse_args()
 
 
