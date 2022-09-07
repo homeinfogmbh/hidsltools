@@ -18,7 +18,12 @@ def clean_homes(*, root: Path = ROOT) -> None:
     """Removes all digital-signage related data."""
 
     for user in sorted(USERS):
-        home = get_user(user, root=root).home
+        try:
+            home = get_user(user, root=root).home
+        except ValueError:
+            LOGGER.error('No such user: %s', user)
+            continue
+
         LOGGER.debug('Cleaning home %s of user %s.', home, user)
 
         if home == ROOT:
