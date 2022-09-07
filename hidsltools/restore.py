@@ -17,6 +17,7 @@ from hidsltools.initcpio import mkinitcpio
 from hidsltools.logging import FORMAT, LOGGER
 from hidsltools.mkfs import mkfs
 from hidsltools.mount import MountContext
+from hidsltools.os_release import write_os_release
 from hidsltools.sgdisk import mkparts
 from hidsltools.ssh import generate_host_keys, restore_authorized_keys
 from hidsltools.syslinux import install_update
@@ -90,6 +91,8 @@ def restore_image(args: Namespace, mountpoint: Optional[Path] = None) -> None:
 
     LOGGER.info('Generating initramfs.')
     mkinitcpio(chroot=mountpoint, verbose=args.verbose)
+    LOGGER.info('Storing image installation data.')
+    write_os_release(root=mountpoint)
 
 
 def restore(args: Namespace) -> None:
