@@ -92,7 +92,7 @@ def restore_image(args: Namespace, mountpoint: Optional[Path] = None) -> None:
     LOGGER.info('Generating initramfs.')
     mkinitcpio(chroot=mountpoint, verbose=args.verbose)
     LOGGER.info('Storing image installation data.')
-    write_os_release(root=mountpoint)
+    write_os_release(mountpoint)
 
 
 def restore(args: Namespace) -> None:

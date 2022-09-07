@@ -14,7 +14,7 @@ __all__ = ['write_os_release']
 OS_RELEASE = Path('/etc/os-release')
 
 
-def write_os_release(*, file: Path = OS_RELEASE, root: Path = ROOT) -> None:
+def write_os_release(root: Path = ROOT, *, file: Path = OS_RELEASE) -> None:
     """Write the OS release info and image metadata to the os-release file."""
 
     with file.open('r') as src, chroot(root, file).open('w') as dst:
