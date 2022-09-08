@@ -5,7 +5,7 @@ from enum import Enum
 from pathlib import Path
 from re import fullmatch
 from tempfile import TemporaryDirectory
-from typing import Iterator, NamedTuple, Optional, Union
+from typing import Iterator, NamedTuple
 
 
 __all__ = [
@@ -32,7 +32,7 @@ class Compression(Enum):
     LZOP = 'lzop'
     GZIP = ('gzip', 'gz')
 
-    def __init__(self, full_name: str, suffix: Optional[str] = None):
+    def __init__(self, full_name: str, suffix: str | None = None):
         """Creates a compression instance."""
         self.full_name = full_name
         self.suffix = suffix or full_name
@@ -65,7 +65,7 @@ class Glob:
 
     __slots__ = ('path', 'glob')
 
-    def __init__(self, path: Union[Path, str], glob: str):
+    def __init__(self, path: Path | str, glob: str):
         """Sets path and glob expression."""
         self.path = Path(path)
         self.glob = glob
@@ -79,8 +79,8 @@ class Note(NamedTuple):
     """A note for a beep melody."""
 
     frequency: int
-    repetitions: Optional[int] = None
-    length: Optional[int] = None
+    repetitions: int | None = None
+    length: int | None = None
 
     @property
     def args(self) -> Iterator[str]:
@@ -103,7 +103,7 @@ class Partition(NamedTuple):
     device: Path
     mountpoint: Path
     filesystem: Filesystem
-    label: Optional[str] = None
+    label: str | None = None
 
 
 class PasswdEntry(NamedTuple):

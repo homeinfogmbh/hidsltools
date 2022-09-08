@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from subprocess import DEVNULL, CompletedProcess, run
-from typing import IO, Iterable, Optional
+from typing import IO, Iterable
 
 from hidsltools.defaults import ROOT
 from hidsltools.logging import LOGGER
@@ -39,8 +39,8 @@ def chroot(root: Path, path: Path) -> Path:
 def exe(
         command,
         *,
-        input: Optional[bytes] = None,
-        stdout: Optional[IO] = None,
+        input: bytes | None = None,
+        stdout: IO | None = None,
         verbose: bool = False
 ) -> CompletedProcess:
     """Returns stdout and stderr parameters for subprocess.run()."""

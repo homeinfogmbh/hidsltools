@@ -1,7 +1,6 @@
 """Pacman related operations."""
 
 from pathlib import Path
-from typing import Optional
 
 from hidsltools.functions import exe
 from hidsltools.types import Glob
@@ -15,7 +14,7 @@ LOCKFILE = Path('/var/lib/pacman/db.lck')
 PACMAN = '/usr/bin/pacman'
 
 
-def pacman_sc(*, root: Optional[Path] = None, verbose: bool = False) -> None:
+def pacman_sc(*, root: Path | None = None, verbose: bool = False) -> None:
     """Run pacman -Sc."""
 
     command = [PACMAN, '-S', '-c', '--noconfirm']
@@ -26,7 +25,7 @@ def pacman_sc(*, root: Optional[Path] = None, verbose: bool = False) -> None:
     exe(command, verbose=verbose)
 
 
-def pacman_scc(*, root: Optional[Path] = None, verbose: bool = False) -> None:
+def pacman_scc(*, root: Path | None = None, verbose: bool = False) -> None:
     """Run pacman -Scc."""
 
     command = [PACMAN, '-S', '-c', '-c', '--noconfirm']
@@ -37,7 +36,7 @@ def pacman_scc(*, root: Optional[Path] = None, verbose: bool = False) -> None:
     exe(command, verbose=verbose)
 
 
-def clean(*, root: Optional[Path] = None, verbose: bool = False) -> None:
+def clean(*, root: Path | None = None, verbose: bool = False) -> None:
     """Clean the pacman cache."""
 
     pacman_sc(root=root, verbose=verbose)

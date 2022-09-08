@@ -4,7 +4,6 @@ from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Optional
 
 from hidsltools.beep import beep
 from hidsltools.bsdtar import extract
@@ -68,7 +67,7 @@ def get_args() -> Namespace:
     return parser.parse_args()
 
 
-def restore_image(args: Namespace, mountpoint: Optional[Path] = None) -> None:
+def restore_image(args: Namespace, mountpoint: Path | None = None) -> None:
     """Restores an image."""
 
     if mountpoint is None:

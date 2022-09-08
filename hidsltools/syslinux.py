@@ -1,7 +1,6 @@
 """Syslinux invocation."""
 
 from pathlib import Path
-from typing import Optional
 
 from hidsltools.functions import exe
 
@@ -15,7 +14,7 @@ SYSLINUX_INSTALL_UPDATE = '/usr/bin/syslinux-install_update'
 
 def install_update(
         *,
-        chroot: Optional[Path] = None,
+        chroot: Path | None = None,
         verbose: bool = False
 ) -> None:
     """Installs or updates syslinux."""

@@ -1,7 +1,6 @@
 """Systemd invocation."""
 
 from pathlib import Path
-from typing import Optional
 
 from hidsltools.functions import exe
 
@@ -23,7 +22,7 @@ SYSTEMCTL = '/usr/bin/systemctl'
 
 def systemctl(
         *args: str,
-        root: Optional[Path] = None,
+        root: Path | None = None,
         verbose: bool = False
 ) -> None:
     """Runs a systemctl command."""
@@ -39,7 +38,7 @@ def systemctl(
 def disable(
         unit: str,
         *,
-        root: Optional[Path] = None,
+        root: Path | None = None,
         verbose: bool = False
 ) -> None:
     """Disables a unit."""
@@ -50,7 +49,7 @@ def disable(
 def enable(
         unit: str,
         *,
-        root: Optional[Path] = None,
+        root: Path | None = None,
         verbose: bool = False
 ) -> None:
     """Enables a unit."""
@@ -60,7 +59,7 @@ def enable(
 
 def journalctl(
         *args: str,
-        root: Optional[Path] = None,
+        root: Path | None = None,
         verbose: bool = False
 ) -> None:
     """Runs journalctl."""
@@ -76,7 +75,7 @@ def journalctl(
 def vacuum_size(
         size: int,
         *,
-        root: Optional[Path] = None,
+        root: Path | None = None,
         verbose: bool = False
 ) -> None:
     """Empties the journal by size."""
@@ -87,7 +86,7 @@ def vacuum_size(
 def vacuum_time(
         time: int,
         *,
-        root: Optional[Path] = None,
+        root: Path | None = None,
         verbose: bool = False
 ) -> None:
     """Empties the journal by time."""
@@ -98,7 +97,7 @@ def vacuum_time(
 def vacuum(
         value: int = 1,
         *,
-        root: Optional[Path] = None,
+        root: Path | None = None,
         verbose: bool = False
 ) -> None:
     """Clears the journal."""

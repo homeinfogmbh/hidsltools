@@ -1,7 +1,6 @@
 """Bsdtar invocation."""
 
 from pathlib import Path
-from typing import Optional
 
 from hidsltools.functions import exe
 from hidsltools.types import Compression
@@ -16,7 +15,7 @@ BSDTAR = '/usr/bin/bsdtar'
 def bsdtar(
         tarball: Path,
         *files: Path,
-        chdir: Optional[Path] = None,
+        chdir: Path | None = None,
         compression: Compression = Compression.LZOP,
         compression_level: int = 9,
         verbose: bool = False
@@ -61,7 +60,7 @@ def create(
 
 def extract(
         tarball: Path,
-        target: Optional[Path] = None,
+        target: Path | None = None,
         *,
         verbose: bool = False
 ) -> None:

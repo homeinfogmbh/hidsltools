@@ -1,7 +1,6 @@
 """File system creation."""
 
 from pathlib import Path
-from typing import Optional
 
 from hidsltools.functions import exe
 from hidsltools.types import Filesystem
@@ -16,7 +15,7 @@ MKFS = '/usr/bin/mkfs'
 def mkvfat(
         device: Path,
         *,
-        label: Optional[str] = None,
+        label: str | None = None,
         fat_size: int = 32,
         verbose: bool = False
 ) -> None:
@@ -37,7 +36,7 @@ def mkvfat(
 def mkext4(
         device: Path,
         *,
-        label: Optional[str] = None,
+        label: str | None = None,
         verbose: bool = False
 ) -> None:
     """Creates an ext4 file system."""

@@ -1,7 +1,7 @@
 """Common functions."""
 
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Iterable
 
 from hidsltools.defaults import ROOT
 from hidsltools.functions import chroot, exe
@@ -20,7 +20,7 @@ def mount(
         device: Path,
         mountpoint: Path,
         *,
-        fstype: Optional[Filesystem] = None,
+        fstype: Filesystem | None = None,
         verbose: bool = False,
         **options
 ) -> None:
