@@ -52,7 +52,8 @@ class MountContext:
             partitions: Iterable[Partition],
             *,
             root: Path = ROOT,
-            verbose: bool = False, **options
+            verbose: bool = False,
+            **options
     ):
         """Sets the partitions."""
         self.partitions = partitions
@@ -69,8 +70,11 @@ class MountContext:
 
     def sorted_partitions(self, reverse: bool = False) -> Iterable[Partition]:
         """Returns the partitions sorted by mount point."""
-        return sorted(self.partitions, key=lambda part: part.mountpoint,
-                      reverse=reverse)
+        return sorted(
+            self.partitions,
+            key=lambda part: part.mountpoint,
+            reverse=reverse
+        )
 
     def mount(self) -> None:
         """Mounts all partitions to the mountpoint."""
@@ -78,8 +82,13 @@ class MountContext:
             mountpoint = chroot(self.root, partition.mountpoint)
             mountpoint.mkdir(mode=0o755, parents=True, exist_ok=True)
             LOGGER.debug('Mounting %s to %s.', partition.device, mountpoint)
-            mount(partition.device, mountpoint, fstype=partition.filesystem,
-                  verbose=self.verbose, **self.options)
+            mount(
+                partition.device,
+                mountpoint,
+                fstype=partition.filesystem,
+                verbose=self.verbose,
+                **self.options
+            )
 
     def umount(self) -> None:
         """Mounts all partitions to the mountpoint."""
