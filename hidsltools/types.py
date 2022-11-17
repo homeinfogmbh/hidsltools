@@ -82,6 +82,9 @@ class Hash(Protocol):
     def hexdigest(self) -> str:
         pass
 
+    def update(self, chunk: bytes) -> None:
+        pass
+
 
 class Note(NamedTuple):
     """A note for a beep melody."""

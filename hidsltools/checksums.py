@@ -12,6 +12,7 @@ __all__ = ['validate_files']
 
 
 CHECKSUMS_FILE = Path('/opt/hidsl/.checksums.sha256')
+CHUNK_SIZE = 4 * 1024 * 1024    # Four MiB
 
 
 def validate_files() -> None:
@@ -46,14 +47,20 @@ def validate(
         filename: Path,
         checksum: str,
         *,
-        hash_func: Callable[[bytes], Hash] = sha256
+        hash_func: Callable[[], Hash] = sha256,
+        chunk_size: int = CHUNK_SIZE
 ) -> bool:
     """Validate files with a hash function."""
 
+    file_hash = hash_func()
+
     with filename.open('rb') as file:
-        if (hex_hash := hash_func(file.read()).hexdigest()) != checksum:
-            raise ValueError(
-                f'Checksum mismatch: {filename} ({hex_hash} != {checksum})'
-            )
+        while (chunk := file.read(chunk_size)) != b'':
+            file_hash.update(chunk)
+
+    if (hex_hash := file_hash.hexdigest()) != checksum:
+        raise ValueError(
+            f'Checksum mismatch: {filename} ({hex_hash} != {checksum})'
+        )
 
     return True
