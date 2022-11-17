@@ -20,6 +20,8 @@ def validate(
     for path, checksum in checksums.items():
         with path.open('rb') as file:
             if (hex_hash := hash_func(file.read()).hexdigest()) != checksum:
-                raise ValueError(f'Checksum mismatch: {hex_hash} / {checksum}')
+                raise ValueError(
+                    f'Checksum mismatch: {path} ({hex_hash} != {checksum})'
+                )
 
     return True
