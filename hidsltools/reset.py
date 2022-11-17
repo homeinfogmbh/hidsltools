@@ -3,6 +3,7 @@
 from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig
 from pathlib import Path
+from subprocess import CalledProcessError
 from typing import Iterator
 
 from hidsltools.errorhandler import ErrorHandler
@@ -23,7 +24,11 @@ from hidsltools.users import clean_homes
 __all__ = ['main']
 
 
-APPLICATION = 'application.service'
+SYSTEMD_UNITS_TO_DISABLE = {
+    'application.service',
+    'html5ds.service',
+    'installation-instructions.service'
+}
 DESCRIPTION = 'Resets operating system for image creation.'
 WARNING = 'unconfigured-warning.service'
 MOUNTPOINT = Path('/mnt')
@@ -77,8 +82,15 @@ def reset(args: Namespace) -> int:
 
         LOGGER.warning('Specified root is not a mount point.')
 
-    LOGGER.info('Disabling application.service.')
-    disable(APPLICATION, root=args.root, verbose=args.verbose)
+    for systemd_unit in SYSTEMD_UNITS_TO_DISABLE:
+        LOGGER.info('Disabling %s.', systemd_unit)
+
+        try:
+            disable(systemd_unit, root=args.root, verbose=args.verbose)
+        except CalledProcessError as error:
+            if error.returncode != 1:   # Ignore non-existent units
+                raise
+
     LOGGER.info('Enabling unconfigured-warning.service.')
     enable(WARNING, root=args.root, verbose=args.verbose)
     LOGGER.info('Removing OpenVPN client configuration.')
