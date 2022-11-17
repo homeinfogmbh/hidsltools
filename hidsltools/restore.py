@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 
 from hidsltools.beep import beep
 from hidsltools.bsdtar import extract
+from hidsltools.checksums import validate_files
 from hidsltools.device import Device
 from hidsltools.defaults import DEVICE, IMAGE, SSH_KEYS
 from hidsltools.errorhandler import ErrorHandler
@@ -73,6 +74,8 @@ def restore_image(args: Namespace, mountpoint: Path | None = None) -> None:
     if mountpoint is None:
         mountpoint = args.root
 
+    LOGGER.info('Validating file checksums.')
+    validate_files()
     LOGGER.info('Extracting image archive.')
     extract(args.image, mountpoint, verbose=args.verbose)
     LOGGER.info('Creating a unique host ID.')
