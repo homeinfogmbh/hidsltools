@@ -5,7 +5,7 @@ from enum import Enum
 from pathlib import Path
 from re import fullmatch
 from tempfile import TemporaryDirectory
-from typing import Iterator, NamedTuple
+from typing import Iterator, NamedTuple, Protocol
 
 
 __all__ = [
@@ -13,6 +13,7 @@ __all__ = [
     'DeviceType',
     'Filesystem',
     'Glob',
+    'Hash',
     'Note',
     'Partition',
     'PasswdEntry',
@@ -73,6 +74,13 @@ class Glob:
     def __iter__(self):
         """Returns the glob generator."""
         return self.path.glob(self.glob)
+
+
+class Hash(Protocol):
+    """Objects returned from hashlib.* algorithms."""
+
+    def hexdigest(self) -> str:
+        pass
 
 
 class Note(NamedTuple):
