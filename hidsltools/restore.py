@@ -74,8 +74,6 @@ def restore_image(args: Namespace, mountpoint: Path | None = None) -> None:
     if mountpoint is None:
         mountpoint = args.root
 
-    LOGGER.info('Validating file checksums.')
-    validate_files()
     LOGGER.info('Extracting image archive.')
     extract(args.image, mountpoint, verbose=args.verbose)
     LOGGER.info('Creating a unique host ID.')
@@ -106,6 +104,9 @@ def restore(args: Namespace) -> None:
 
     if not args.device.is_block_device():
         LOGGER.critical('%s is not a block device.', args.device)
+
+    LOGGER.info('Validating file checksums.')
+    validate_files()
 
     if args.wipefs:
         LOGGER.info('Wiping file systems: %s', args.device)
