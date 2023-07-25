@@ -8,16 +8,16 @@ from hidsltools.defaults import ROOT
 from hidsltools.types import PasswdEntry
 
 
-__all__ = ['get_user', 'passwd']
+__all__ = ["get_user", "passwd"]
 
 
-ETC_PASSWD = Path('etc/passwd')
+ETC_PASSWD = Path("etc/passwd")
 
 
 def passwd(*, root: Path = ROOT) -> Iterator[PasswdEntry]:
     """Yields passwd entries."""
 
-    with (root / ETC_PASSWD).open('r', encoding='utf-8') as file:
+    with (root / ETC_PASSWD).open("r", encoding="utf-8") as file:
         for line in file:
             if line := line.strip():
                 yield PasswdEntry.from_string(line)
@@ -32,7 +32,7 @@ def match(ident: str | int) -> Callable[[PasswdEntry], bool]:
     if isinstance(ident, int):
         return lambda passwd_entry: passwd_entry.uid == ident
 
-    raise TypeError('Identifier must be str (name) or int (UID).')
+    raise TypeError("Identifier must be str (name) or int (UID).")
 
 
 def get_user(ident: str | int, *, root: Path = ROOT) -> PasswdEntry:
@@ -41,4 +41,4 @@ def get_user(ident: str | int, *, root: Path = ROOT) -> PasswdEntry:
     for passwd_entry in filter(match(ident), passwd(root=root)):
         return passwd_entry
 
-    raise ValueError('No matching passwd entry found.')
+    raise ValueError("No matching passwd entry found.")

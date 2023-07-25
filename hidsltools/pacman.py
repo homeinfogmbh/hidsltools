@@ -6,21 +6,21 @@ from hidsltools.functions import exe
 from hidsltools.types import Glob
 
 
-__all__ = ['CACHED_PKGS', 'LOCKFILE', 'clean']
+__all__ = ["CACHED_PKGS", "LOCKFILE", "clean"]
 
 
-CACHED_PKGS = Glob('/var/cache/pacman/pkg', '*.pkg*')
-LOCKFILE = Path('/var/lib/pacman/db.lck')
-PACMAN = '/usr/bin/pacman'
+CACHED_PKGS = Glob("/var/cache/pacman/pkg", "*.pkg*")
+LOCKFILE = Path("/var/lib/pacman/db.lck")
+PACMAN = "/usr/bin/pacman"
 
 
 def pacman_sc(*, root: Path | None = None, verbose: bool = False) -> None:
     """Run pacman -Sc."""
 
-    command = [PACMAN, '-S', '-c', '--noconfirm']
+    command = [PACMAN, "-S", "-c", "--noconfirm"]
 
     if root is not None:
-        command += ['--sysroot', str(root)]
+        command += ["--sysroot", str(root)]
 
     exe(command, verbose=verbose)
 
@@ -28,10 +28,10 @@ def pacman_sc(*, root: Path | None = None, verbose: bool = False) -> None:
 def pacman_scc(*, root: Path | None = None, verbose: bool = False) -> None:
     """Run pacman -Scc."""
 
-    command = [PACMAN, '-S', '-c', '-c', '--noconfirm']
+    command = [PACMAN, "-S", "-c", "-c", "--noconfirm"]
 
     if root is not None:
-        command += ['--sysroot', str(root)]
+        command += ["--sysroot", str(root)]
 
     exe(command, verbose=verbose)
 

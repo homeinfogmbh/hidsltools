@@ -6,100 +6,67 @@ from hidsltools.functions import exe
 
 
 __all__ = [
-    'disable',
-    'enable',
-    'journalctl',
-    'systemctl',
-    'vacuum',
-    'vacuum_size',
-    'vacuum_time'
+    "disable",
+    "enable",
+    "journalctl",
+    "systemctl",
+    "vacuum",
+    "vacuum_size",
+    "vacuum_time",
 ]
 
 
-JOURNALCTL = '/usr/bin/journalctl'
-SYSTEMCTL = '/usr/bin/systemctl'
+JOURNALCTL = "/usr/bin/journalctl"
+SYSTEMCTL = "/usr/bin/systemctl"
 
 
-def systemctl(
-        *args: str,
-        root: Path | None = None,
-        verbose: bool = False
-) -> None:
+def systemctl(*args: str, root: Path | None = None, verbose: bool = False) -> None:
     """Runs a systemctl command."""
 
     command = [SYSTEMCTL, *args]
 
     if root is not None:
-        command += ['--root', str(root)]
+        command += ["--root", str(root)]
 
     exe(command, verbose=verbose)
 
 
-def disable(
-        unit: str,
-        *,
-        root: Path | None = None,
-        verbose: bool = False
-) -> None:
+def disable(unit: str, *, root: Path | None = None, verbose: bool = False) -> None:
     """Disables a unit."""
 
-    systemctl('disable', unit, root=root, verbose=verbose)
+    systemctl("disable", unit, root=root, verbose=verbose)
 
 
-def enable(
-        unit: str,
-        *,
-        root: Path | None = None,
-        verbose: bool = False
-) -> None:
+def enable(unit: str, *, root: Path | None = None, verbose: bool = False) -> None:
     """Enables a unit."""
 
-    systemctl('enable', unit, root=root, verbose=verbose)
+    systemctl("enable", unit, root=root, verbose=verbose)
 
 
-def journalctl(
-        *args: str,
-        root: Path | None = None,
-        verbose: bool = False
-) -> None:
+def journalctl(*args: str, root: Path | None = None, verbose: bool = False) -> None:
     """Runs journalctl."""
 
     command = [JOURNALCTL, *args]
 
     if root is not None:
-        command += ['--root', str(root)]
+        command += ["--root", str(root)]
 
     exe(command, verbose=verbose)
 
 
-def vacuum_size(
-        size: int,
-        *,
-        root: Path | None = None,
-        verbose: bool = False
-) -> None:
+def vacuum_size(size: int, *, root: Path | None = None, verbose: bool = False) -> None:
     """Empties the journal by size."""
 
-    journalctl('--vacuum-size', str(size), root=root, verbose=verbose)
+    journalctl("--vacuum-size", str(size), root=root, verbose=verbose)
 
 
-def vacuum_time(
-        time: int,
-        *,
-        root: Path | None = None,
-        verbose: bool = False
-) -> None:
+def vacuum_time(time: int, *, root: Path | None = None, verbose: bool = False) -> None:
     """Empties the journal by time."""
 
-    journalctl('--vacuum-time', str(time), root=root, verbose=verbose)
+    journalctl("--vacuum-time", str(time), root=root, verbose=verbose)
 
 
-def vacuum(
-        value: int = 1,
-        *,
-        root: Path | None = None,
-        verbose: bool = False
-) -> None:
+def vacuum(value: int = 1, *, root: Path | None = None, verbose: bool = False) -> None:
     """Clears the journal."""
 
     vacuum_size(value, root=root, verbose=verbose)

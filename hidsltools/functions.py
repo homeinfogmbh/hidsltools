@@ -8,17 +8,11 @@ from hidsltools.defaults import ROOT
 from hidsltools.logging import LOGGER
 
 
-__all__ = [
-    'arch_chroot',
-    'chroot',
-    'exe',
-    'rmsubtree',
-    'rmtree'
-]
+__all__ = ["arch_chroot", "chroot", "exe", "rmsubtree", "rmtree"]
 
 
-ARCH_CHROOT = '/usr/bin/arch-chroot'
-GETENT = '/usr/bin/getent'
+ARCH_CHROOT = "/usr/bin/arch-chroot"
+GETENT = "/usr/bin/getent"
 
 
 def arch_chroot(root: Path, command: Iterable[str]) -> list[str]:
@@ -37,17 +31,17 @@ def chroot(root: Path, path: Path) -> Path:
 
 
 def exe(
-        command,
-        *,
-        input: bytes | None = None,
-        stdout: IO | None = None,
-        verbose: bool = False
+    command,
+    *,
+    input: bytes | None = None,
+    stdout: IO | None = None,
+    verbose: bool = False
 ) -> CompletedProcess:
     """Returns stdout and stderr parameters for subprocess.run()."""
 
     stderr = None if verbose else DEVNULL
     stdout = stdout if stdout is not None else None if verbose else DEVNULL
-    LOGGER.debug('Running command: %s', command)
+    LOGGER.debug("Running command: %s", command)
     return run(command, input=input, check=True, stderr=stderr, stdout=stdout)
 
 

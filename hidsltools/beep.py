@@ -6,10 +6,10 @@ from hidsltools.functions import exe
 from hidsltools.types import Note
 
 
-__all__ = ['beep']
+__all__ = ["beep"]
 
 
-BEEP = '/usr/bin/beep'
+BEEP = "/usr/bin/beep"
 MELODY = (
     Note(1000),
     Note(1500),
@@ -19,7 +19,7 @@ MELODY = (
     Note(50, 2, 200),
     Note(40, 2, 300),
     Note(60, 3),
-    Note(50, 3)
+    Note(50, 3),
 )
 
 
@@ -30,7 +30,7 @@ def get_args(melody: Iterable[Note]) -> Iterator[str]:
     yield from first.args
 
     for note in rest:
-        yield '-n'
+        yield "-n"
         yield from note.args
 
 

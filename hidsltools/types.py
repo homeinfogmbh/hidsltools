@@ -9,29 +9,29 @@ from typing import Iterator, NamedTuple, Protocol
 
 
 __all__ = [
-    'Compression',
-    'DeviceType',
-    'Filesystem',
-    'Glob',
-    'Hash',
-    'Note',
-    'Partition',
-    'PasswdEntry',
-    'SafeTemporaryDirectory'
+    "Compression",
+    "DeviceType",
+    "Filesystem",
+    "Glob",
+    "Hash",
+    "Note",
+    "Partition",
+    "PasswdEntry",
+    "SafeTemporaryDirectory",
 ]
 
 
 class Compression(Enum):
     """Compression types."""
 
-    XZ = 'xz'
-    BZIP2 = ('bzip2', 'bz2')
-    LRZIP = 'lrzip'
-    LZ4 = 'lz4'
-    ZSTD = 'zstd'
-    LZMA = 'lzma'
-    LZOP = 'lzop'
-    GZIP = ('gzip', 'gz')
+    XZ = "xz"
+    BZIP2 = ("bzip2", "bz2")
+    LRZIP = "lrzip"
+    LZ4 = "lz4"
+    ZSTD = "zstd"
+    LZMA = "lzma"
+    LZOP = "lzop"
+    GZIP = ("gzip", "gz")
 
     def __init__(self, full_name: str, suffix: str | None = None):
         """Creates a compression instance."""
@@ -43,7 +43,7 @@ class DeviceType(NamedTuple):
     """Block device types."""
 
     regex: str
-    infix: str = ''
+    infix: str = ""
 
     def check(self, path: Path) -> bool:
         """Checks is the given path is a device of this type."""
@@ -53,9 +53,9 @@ class DeviceType(NamedTuple):
 class Filesystem(Enum):
     """Known file systems."""
 
-    CIFS = 'cifs'
-    EXT4 = 'ext4'
-    VFAT = 'vfat'
+    CIFS = "cifs"
+    EXT4 = "ext4"
+    VFAT = "vfat"
 
     def __str__(self):
         return self.value
@@ -64,7 +64,7 @@ class Filesystem(Enum):
 class Glob:
     """A re-iterable path glob."""
 
-    __slots__ = ('path', 'glob')
+    __slots__ = ("path", "glob")
 
     def __init__(self, path: Path | str, glob: str):
         """Sets path and glob expression."""
@@ -96,15 +96,15 @@ class Note(NamedTuple):
     @property
     def args(self) -> Iterator[str]:
         """Yields arguments for the beep command."""
-        yield '-f'
+        yield "-f"
         yield str(self.frequency)
 
         if self.repetitions is not None:
-            yield '-r'
+            yield "-r"
             yield str(self.repetitions)
 
         if self.length is not None:
-            yield '-l'
+            yield "-l"
             yield str(self.length)
 
 
@@ -131,10 +131,8 @@ class PasswdEntry(NamedTuple):
     @classmethod
     def from_string(cls, string: str) -> PasswdEntry:
         """Creates a passwd entry from a string."""
-        name, password, uid, gid, gecos, directory, shell = string.split(':')
-        return cls(
-            name, password, int(uid), int(gid), gecos, Path(directory), shell
-        )
+        name, password, uid, gid, gecos, directory, shell = string.split(":")
+        return cls(name, password, int(uid), int(gid), gecos, Path(directory), shell)
 
     @property
     def home(self) -> Path:

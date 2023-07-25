@@ -21,17 +21,17 @@ from hidsltools.types import Glob
 from hidsltools.users import clean_homes
 
 
-__all__ = ['main']
+__all__ = ["main"]
 
 
 SYSTEMD_UNITS_TO_DISABLE = {
-    'application.service',
-    'html5ds.service',
-    'installation-instructions.service'
+    "application.service",
+    "html5ds.service",
+    "installation-instructions.service",
 }
-DESCRIPTION = 'Resets operating system for image creation.'
-WARNING = 'unconfigured-warning.service'
-MOUNTPOINT = Path('/mnt')
+DESCRIPTION = "Resets operating system for image creation."
+WARNING = "unconfigured-warning.service"
+MOUNTPOINT = Path("/mnt")
 REMOVE_FILES = [AUTOUPDATE, FSTAB, HOST_ID, HOSTNAME, LOCKFILE, MACHINE_ID]
 REMOVE_GLOBS = [CACHED_PKGS, INITRAMFS, HOST_KEYS]
 
@@ -40,23 +40,21 @@ def get_args() -> Namespace:
     """Returns the CLI arguments."""
 
     parser = ArgumentParser(description=DESCRIPTION)
+    parser.add_argument("root", type=Path, default=MOUNTPOINT, help="the target system")
     parser.add_argument(
-        'root', type=Path, default=MOUNTPOINT, help='the target system'
+        "-q", "--quiet", action="store_true", help="do not beep after completion"
     )
     parser.add_argument(
-        '-q', '--quiet', action='store_true',
-        help='do not beep after completion'
+        "-v", "--verbose", action="store_true", help="show output of subprocesses"
     )
     parser.add_argument(
-        '-v', '--verbose', action='store_true',
-        help='show output of subprocesses'
+        "-f",
+        "--force",
+        action="store_true",
+        help="do not error out if root is not a mountpoint",
     )
     parser.add_argument(
-        '-f', '--force', action='store_true',
-        help='do not error out if root is not a mountpoint'
-    )
-    parser.add_argument(
-        '-d', '--debug', action='store_true', help='enable verbose logging'
+        "-d", "--debug", action="store_true", help="enable verbose logging"
     )
     return parser.parse_args()
 
@@ -77,34 +75,34 @@ def reset(args: Namespace) -> int:
 
     if not args.root.is_mount():
         if not args.force:
-            LOGGER.error('Specified root is not a mount point.')
+            LOGGER.error("Specified root is not a mount point.")
             return 1
 
-        LOGGER.warning('Specified root is not a mount point.')
+        LOGGER.warning("Specified root is not a mount point.")
 
     for systemd_unit in SYSTEMD_UNITS_TO_DISABLE:
-        LOGGER.info('Disabling %s.', systemd_unit)
+        LOGGER.info("Disabling %s.", systemd_unit)
 
         try:
             disable(systemd_unit, root=args.root, verbose=args.verbose)
         except CalledProcessError as error:
-            if error.returncode != 1:   # Ignore non-existent units
+            if error.returncode != 1:  # Ignore non-existent units
                 raise
 
-    LOGGER.info('Enabling unconfigured-warning.service.')
+    LOGGER.info("Enabling unconfigured-warning.service.")
     enable(WARNING, root=args.root, verbose=args.verbose)
-    LOGGER.info('Removing OpenVPN client configuration.')
+    LOGGER.info("Removing OpenVPN client configuration.")
     delete_client_config(root=args.root)
 
     for file in get_files_to_be_removed(args.root):
-        LOGGER.info('Removing: %s', file)
+        LOGGER.info("Removing: %s", file)
         file.unlink(missing_ok=True)
 
-    LOGGER.info('Clearing journal.')
+    LOGGER.info("Clearing journal.")
     vacuum(root=args.root, verbose=args.verbose)
-    LOGGER.info('Cleaning up package cache.')
+    LOGGER.info("Cleaning up package cache.")
     clean(root=args.root, verbose=args.verbose)
-    LOGGER.info('Cleaning up home folders.')
+    LOGGER.info("Cleaning up home folders.")
     clean_homes(root=args.root)
     return 0
 

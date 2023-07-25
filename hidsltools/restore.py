@@ -24,46 +24,50 @@ from hidsltools.syslinux import install_update
 from hidsltools.wipefs import wipefs
 
 
-__all__ = ['main']
+__all__ = ["main"]
 
 
 def get_args() -> Namespace:
     """Returns the CLI arguments."""
 
-    parser = ArgumentParser(description='Restore operating system images.')
+    parser = ArgumentParser(description="Restore operating system images.")
     parser.add_argument(
-        'device', nargs='?', type=Device, default=DEVICE, help='target device'
+        "device", nargs="?", type=Device, default=DEVICE, help="target device"
     )
     parser.add_argument(
-        '-i', '--image', type=Path, metavar='file', default=IMAGE,
-        help='image file'
+        "-i", "--image", type=Path, metavar="file", default=IMAGE, help="image file"
     )
     parser.add_argument(
-        '-r', '--root', type=Path, metavar='mountpoint',
-        help='target root directory'
+        "-r", "--root", type=Path, metavar="mountpoint", help="target root directory"
     )
     parser.add_argument(
-        '-w', '--wipefs', action='store_true',
-        help='wipe filesystems before partitioning'
+        "-w",
+        "--wipefs",
+        action="store_true",
+        help="wipe filesystems before partitioning",
     )
     parser.add_argument(
-        '-m', '--mbr', action='store_true',
-        help='perform an MBR instead of an EFI installation'
+        "-m",
+        "--mbr",
+        action="store_true",
+        help="perform an MBR instead of an EFI installation",
     )
     parser.add_argument(
-        '-s', '--ssh-keys', type=Path, metavar='file', default=SSH_KEYS,
-        help='restore SSH keys from this JSON file'
+        "-s",
+        "--ssh-keys",
+        type=Path,
+        metavar="file",
+        default=SSH_KEYS,
+        help="restore SSH keys from this JSON file",
     )
     parser.add_argument(
-        '-q', '--quiet', action='store_true',
-        help='do not beep after completion'
+        "-q", "--quiet", action="store_true", help="do not beep after completion"
     )
     parser.add_argument(
-        '-v', '--verbose', action='store_true',
-        help='show output of subprocesses'
+        "-v", "--verbose", action="store_true", help="show output of subprocesses"
     )
     parser.add_argument(
-        '-d', '--debug', action='store_true', help='enable verbose logging'
+        "-d", "--debug", action="store_true", help="enable verbose logging"
     )
     return parser.parse_args()
 
@@ -74,24 +78,24 @@ def restore_image(args: Namespace, mountpoint: Path | None = None) -> None:
     if mountpoint is None:
         mountpoint = args.root
 
-    LOGGER.info('Extracting image archive.')
+    LOGGER.info("Extracting image archive.")
     extract(args.image, mountpoint, verbose=args.verbose)
-    LOGGER.info('Creating a unique host ID.')
+    LOGGER.info("Creating a unique host ID.")
     mkhostid(root=mountpoint)
-    LOGGER.info('Generating SSH host keys.')
+    LOGGER.info("Generating SSH host keys.")
     generate_host_keys(root=mountpoint, verbose=args.verbose)
-    LOGGER.info('Restoring SSH keys.')
+    LOGGER.info("Restoring SSH keys.")
     restore_authorized_keys(args.ssh_keys, root=mountpoint)
-    LOGGER.info('Generating fstab.')
+    LOGGER.info("Generating fstab.")
     genfstab(root=mountpoint, verbose=args.verbose)
 
     if args.mbr:
-        LOGGER.info('Installing syslinux.')
+        LOGGER.info("Installing syslinux.")
         install_update(chroot=mountpoint, verbose=args.verbose)
 
-    LOGGER.info('Generating initramfs.')
+    LOGGER.info("Generating initramfs.")
     mkinitcpio(chroot=mountpoint, verbose=args.verbose)
-    LOGGER.info('Storing image installation data.')
+    LOGGER.info("Storing image installation data.")
     write_os_release(mountpoint)
 
 
@@ -103,37 +107,39 @@ def restore(args: Namespace) -> None:
         return
 
     if not args.device.is_block_device():
-        LOGGER.critical('%s is not a block device.', args.device)
+        LOGGER.critical("%s is not a block device.", args.device)
 
-    LOGGER.info('Validating file checksums.')
+    LOGGER.info("Validating file checksums.")
     validate_files()
 
     if args.wipefs:
-        LOGGER.info('Wiping file systems: %s', args.device)
+        LOGGER.info("Wiping file systems: %s", args.device)
         wipefs(args.device, verbose=args.verbose)
 
-    LOGGER.info('Partitioning disk: %s', args.device)
+    LOGGER.info("Partitioning disk: %s", args.device)
     partitions = []
 
-    for partition in mkparts(
-            args.device, efi=not args.mbr, verbose=args.verbose
-    ):
+    for partition in mkparts(args.device, efi=not args.mbr, verbose=args.verbose):
         partitions.append(partition)
-        LOGGER.debug('Created partition: %s', partition)
+        LOGGER.debug("Created partition: %s", partition)
 
-    LOGGER.info('Creating file systems.')
+    LOGGER.info("Creating file systems.")
 
     for partition in partitions:
         LOGGER.info(
-            'Formatting %s with %s as %s.',
+            "Formatting %s with %s as %s.",
             partition.device,
             partition.filesystem,
-            partition.label
+            partition.label,
         )
-        mkfs(partition.device, partition.filesystem, label=partition.label,
-             verbose=args.verbose)
+        mkfs(
+            partition.device,
+            partition.filesystem,
+            label=partition.label,
+            verbose=args.verbose,
+        )
 
-    LOGGER.info('Mounting partitions.')
+    LOGGER.info("Mounting partitions.")
 
     with TemporaryDirectory() as tmpd:
         with MountContext(partitions, root=tmpd) as mountpoint:
