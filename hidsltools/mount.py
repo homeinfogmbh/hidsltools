@@ -51,7 +51,7 @@ class MountContext:
         self,
         partitions: Iterable[Partition],
         *,
-        root: Path = ROOT,
+        root: Path | str = ROOT,
         verbose: bool = False,
         **options,
     ):
