@@ -26,6 +26,7 @@ __all__ = ["main"]
 
 SYSTEMD_UNITS_TO_DISABLE = {
     "application.service",
+    "chromium.service",
     "html5ds.service",
     "installation-instructions.service",
 }
