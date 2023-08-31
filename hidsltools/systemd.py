@@ -3,9 +3,11 @@
 from pathlib import Path
 
 from hidsltools.functions import exe
+from hidsltools.types import Glob
 
 
 __all__ = [
+    "CORE_DUMPS",
     "disable",
     "enable",
     "journalctl",
@@ -16,6 +18,7 @@ __all__ = [
 ]
 
 
+CORE_DUMPS = Glob("/var/lib/systemd/coredump", "*")
 JOURNALCTL = "/usr/bin/journalctl"
 SYSTEMCTL = "/usr/bin/systemctl"
 
