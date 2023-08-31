@@ -8,6 +8,7 @@ from hidsltools.types import Glob
 
 __all__ = [
     "CORE_DUMPS",
+    "JOURNALS",
     "disable",
     "enable",
     "journalctl",
@@ -20,6 +21,7 @@ __all__ = [
 
 CORE_DUMPS = Glob("/var/lib/systemd/coredump", "*")
 JOURNALCTL = "/usr/bin/journalctl"
+JOURNALS = Glob("/var/log/journal", "*")
 SYSTEMCTL = "/usr/bin/systemctl"
 
 

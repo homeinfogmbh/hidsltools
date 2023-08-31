@@ -16,7 +16,7 @@ from hidsltools.openvpn import delete_client_config
 from hidsltools.pacman import CACHED_PKGS, LOCKFILE, clean
 from hidsltools.ssh import HOST_KEYS
 from hidsltools.syslinux import AUTOUPDATE
-from hidsltools.systemd import CORE_DUMPS, vacuum, disable, enable
+from hidsltools.systemd import CORE_DUMPS, JOURNALS, vacuum, disable, enable
 from hidsltools.types import Glob
 from hidsltools.users import clean_homes
 
@@ -34,7 +34,7 @@ DESCRIPTION = "Resets operating system for image creation."
 WARNING = "unconfigured-warning.service"
 MOUNTPOINT = Path("/mnt")
 REMOVE_FILES = [AUTOUPDATE, FSTAB, HOST_ID, HOSTNAME, LOCKFILE, MACHINE_ID]
-REMOVE_GLOBS = [CACHED_PKGS, CORE_DUMPS, INITRAMFS, HOST_KEYS]
+REMOVE_GLOBS = [CACHED_PKGS, CORE_DUMPS, HOST_KEYS, INITRAMFS, JOURNALS]
 
 
 def get_args() -> Namespace:
