@@ -15,7 +15,4 @@ CLIENTS_DIR = Path("/etc/openvpn/client")
 def delete_client_config(*, root: Path = ROOT) -> None:
     """Deletes OpenVPN clients configuration."""
 
-    if not (clients_dir := chroot(root, CLIENTS_DIR)).exists():
-        return
-
-    rmsubtree(clients_dir)
+    rmsubtree(chroot(root, CLIENTS_DIR))

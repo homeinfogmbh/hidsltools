@@ -48,6 +48,9 @@ def exe(
 def rmsubtree(directory: Path) -> None:
     """Removes all files and folders below the given directory."""
 
+    if not directory.is_dir():
+        return
+
     for child in directory.iterdir():
         rmtree(child)
 
