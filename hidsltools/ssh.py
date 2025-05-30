@@ -14,7 +14,7 @@ from hidsltools.types import Glob
 __all__ = ["HOST_KEYS", "generate_host_keys", "restore_authorized_keys"]
 
 
-CIPHERS = {"dsa", "rsa", "ecdsa", "ed25519"}
+CIPHERS = {"rsa", "ecdsa", "ed25519"}
 HOST_KEYS = Glob("/etc/ssh/host", "*key*")
 KEY_TEMPLATE = "/etc/ssh/ssh_host_{cipher}_key"
 SSH_KEYGEN = "/usr/bin/ssh-keygen"
