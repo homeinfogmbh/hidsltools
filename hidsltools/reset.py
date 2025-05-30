@@ -57,6 +57,9 @@ def get_args() -> Namespace:
     parser.add_argument(
         "-d", "--debug", action="store_true", help="enable verbose logging"
     )
+    parser.add_argument(
+        "-h", "--home", action="store_true", help="dont delete home directory"
+    )
     return parser.parse_args()
 
 
@@ -103,8 +106,11 @@ def reset(args: Namespace) -> int:
     vacuum(root=args.root, verbose=args.verbose)
     LOGGER.info("Cleaning up package cache.")
     clean(root=args.root, verbose=args.verbose)
-    LOGGER.info("Cleaning up home folders.")
-    clean_homes(root=args.root)
+    if not args.home:
+        LOGGER.info("Cleaning up home folders.")
+        clean_homes(root=args.root)
+    else:
+        LOGGER.info("Dont clean home directories.")
     return 0
 
 
