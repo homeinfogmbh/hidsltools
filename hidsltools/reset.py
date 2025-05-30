@@ -58,7 +58,7 @@ def get_args() -> Namespace:
         "-d", "--debug", action="store_true", help="enable verbose logging"
     )
     parser.add_argument(
-        "-h", "--home", action="store_true", help="dont delete home directory"
+        "-i", "--ignore-home", action="store_true", help="dont delete home directory"
     )
     return parser.parse_args()
 
